@@ -79,4 +79,5 @@ public class TestButton extends FrameLayout {
         progressBar.setVisibility(enabled ? VISIBLE : GONE);
         button.setText(enabled ? "" : text);
     }
+
 }
