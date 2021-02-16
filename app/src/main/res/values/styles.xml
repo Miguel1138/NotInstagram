@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="FormContainer">
+        <item name="android:layout_marginStart">36dp</item>
+        <item name="android:layout_marginEnd">36dp</item>
+    </style>
+
+    <style name="InstaFormEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:background">@drawable/edit_text_background</item>
+    </style>
+
+    <style name="InstaFormEditTextInput" parent="FormContainer">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="strokeColor"> @color/red</item>
+        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:layout_marginStart">36dp</item>
+        <item name="android:layout_marginEnd">36dp</item>
+    </style>
+
+    <style name="InstaFormButton" parent="FormContainer">
+        <item name="android:layout_width"> match_parent</item>
+        <item name="android:layout_height"> wrap_content</item>
+        <item name="android:padding"> 16dp </item>
+        <item name="android:layout_marginBottom"> 24dp </item>
+        <item name="android:textColor"> @color/white </item>
+        <item name="android:background">@drawable/button_background</item>
+    </style>
+
+    <style name="InstaFormButton.Link" parent="InstaFormButton">
+        <item name="android:textColor"> @color/blueEnable</item>
+        <item name="android:background">@null</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width"> wrap_content </item>
+    </style>
+
+    <style name="InstaTextViewBase">
+        <item name="android:textColor"> @color/grayText </item>
+        <item name="android:layout_width"> wrap_content</item>
+        <item name="android:layout_height"> wrap_content </item>
+    </style>
+
+    <style name="InstaFormEditTextError">
+        <item name="android:textColor">@color/red</item>
+    </style>
+
+</resources>
