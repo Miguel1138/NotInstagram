@@ -17,36 +17,72 @@
     <style name="InstaFormEditTextInput" parent="FormContainer">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="strokeColor"> @color/red</item>
+        <item name="strokeColor">@color/red</item>
         <item name="android:layout_marginBottom">20dp</item>
         <item name="android:layout_marginStart">36dp</item>
         <item name="android:layout_marginEnd">36dp</item>
     </style>
 
     <style name="InstaFormButton" parent="FormContainer">
-        <item name="android:layout_width"> match_parent</item>
-        <item name="android:layout_height"> wrap_content</item>
-        <item name="android:padding"> 16dp </item>
-        <item name="android:layout_marginBottom"> 24dp </item>
-        <item name="android:textColor"> @color/white </item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:layout_marginBottom">24dp</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:background">@drawable/button_background</item>
     </style>
 
+    <style name="InstaButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background"> @drawable/button_background</item>
+    </style>
+
+    <style name="InstaButton.White">
+        <item name="android:textColor">?attr/colorAccent</item>
+        <item name="android:background">@drawable/button_white_background</item>
+    </style>
+
     <style name="InstaFormButton.Link" parent="InstaFormButton">
-        <item name="android:textColor"> @color/blueEnable</item>
+        <item name="android:textColor">@color/blueEnable</item>
         <item name="android:background">@null</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:layout_width"> wrap_content </item>
+        <item name="android:layout_width">wrap_content</item>
     </style>
 
     <style name="InstaTextViewBase">
-        <item name="android:textColor"> @color/grayText </item>
-        <item name="android:layout_width"> wrap_content</item>
-        <item name="android:layout_height"> wrap_content </item>
+        <item name="android:textColor">@color/grayText</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="InstaTextViewbaseForm" parent="FormContainer">
+        <item name="android:textColor">?attr/colorAccent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_marginBottom">24dp</item>
+    </style>
+
+    <style name="InstaTextViewBaseDialog">
+        <item name="android:textColor">?attr/colorAccent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">12dp</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:layout_marginStart">12dp</item>
+        <item name="android:textAlignment">textStart</item>
     </style>
 
     <style name="InstaFormEditTextError">
         <item name="android:textColor">@color/red</item>
+    </style>
+
+    <style name="InstaTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">?attr/colorAccent</item>
     </style>
 
 </resources>

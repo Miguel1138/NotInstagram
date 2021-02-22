@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".register.presentation.RegisterActivity"
+    tools:showIn="@layout/activity_register">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:src="@drawable/camera_icon" />
+
+    <TextView
+        style="@style/InstaTextViewbaseForm"
+        android:layout_gravity="center"
+        android:text="@string/photo_register_title"
+        android:textSize="24sp" />
+
+    <TextView
+        style="@style/InstaTextViewbaseForm"
+        android:layout_gravity="center"
+        android:text="@string/photo_register_subtitle" />
+
+    <com.miguel_santos.notinstagram.common.view.LoadingButton
+        android:id="@+id/register_btn_next"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:text="@string/add_photo" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/register_btn_jump"
+        style="@style/InstaFormButton.Link"
+        android:layout_gravity="center"
+        android:layout_marginBottom="36dp"
+        android:text="@string/jump" />
+
+</LinearLayout>

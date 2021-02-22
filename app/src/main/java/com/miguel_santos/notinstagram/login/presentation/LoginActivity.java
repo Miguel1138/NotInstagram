@@ -1,10 +1,13 @@
 package com.miguel_santos.notinstagram.login.presentation;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,15 +15,21 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.miguel_santos.notinstagram.R;
+import com.miguel_santos.notinstagram.common.view.LoadingButton;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private TestButton buttonEnter;
+    private LoadingButton buttonEnter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ContextCompat.getColor(this, R.color.black));
+        }
 
         final EditText edtEmail = findViewById(R.id.login_edt_email);
         edtEmail.addTextChangedListener(watcher);
@@ -55,7 +64,11 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            findViewById(R.id.login_btn_enter).setEnabled(!s.toString().isEmpty());
+            if (!s.toString().isEmpty()) {
+                buttonEnter.setEnabled(true);
+            } else {
+                buttonEnter.setEnabled(false);
+            }
         }
 
         @Override

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".register.presentation.RegisterActivity"
+    tools:showIn="@layout/activity_register">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:scaleX=".5"
+        android:scaleY=".5"
+        android:src="@drawable/photo_icon" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/register_input_edt_email"
+        style="@style/InstaFormEditTextInput"
+        app:errorTextAppearance="@style/InstaFormEditTextError"
+        app:hintEnabled="false">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/register_edt_email"
+            style="@style/InstaFormEditText"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.miguel_santos.notinstagram.common.view.LoadingButton
+        android:id="@+id/register_btn_next"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:text="@string/next" />
+
+    <View
+        android:id="@+id/divider_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="80dp"
+        android:background="@color/grayBorder" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/register_tev_login"
+        style="@style/InstaTextViewBase"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:padding="24dp"
+        android:text="@string/already_has_account" />
+
+</LinearLayout>

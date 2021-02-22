@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".register.presentation.RegisterActivity"
+    tools:showIn="@layout/activity_register">
+
+    <TextView
+        style="@style/InstaTextViewbaseForm"
+        android:layout_gravity="center"
+        android:text="@string/welcome_to_instagram" />
+
+    <com.miguel_santos.notinstagram.common.view.LoadingButton
+        android:id="@+id/register_btn_next"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:text="@string/next" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/register_tev_login"
+        style="@style/InstaTextViewBase"
+        android:layout_width="match_parent"
+        android:layout_marginTop="200dp"
+        android:gravity="center"
+        android:padding="24dp"
+        android:text="@string/agree_terms_policy" />
+
+</LinearLayout>
