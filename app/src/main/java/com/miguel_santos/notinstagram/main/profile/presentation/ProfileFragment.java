@@ -1,7 +1,9 @@
-package com.miguel_santos.notinstagram.main.profile;
+package com.miguel_santos.notinstagram.main.profile.presentation;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,10 +21,10 @@ public class ProfileFragment extends Fragment {
     public ProfileFragment() {
     }
 
-    // TODO: 22/02/2021 app:layout_scroll_flags="scroll" at toolbar
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // TODO: 22/02/2021 app:layout_scroll_flags="scroll" at toolbar
         View view = inflater.inflate(R.layout.fragment_main_profile, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.profile_recycler);
 
@@ -30,6 +32,18 @@ public class ProfileFragment extends Fragment {
         recyclerView.setAdapter(new PostAdapter());
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_profile, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     private class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
