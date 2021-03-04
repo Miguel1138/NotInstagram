@@ -17,7 +17,6 @@ public class LoginPresenter implements Presenter {
     }
 
     public void login(String email, String password) {
-        // TODO: 01/03/2021 Integração com o banco de dados remoto futuramente
         if (!Strings.emailValid(email)) {
             view.onFailureForm(view.getContext().getString(R.string.invalid_email), null);
             return;

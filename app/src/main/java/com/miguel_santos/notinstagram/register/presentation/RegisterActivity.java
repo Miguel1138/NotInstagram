@@ -12,6 +12,8 @@ import com.miguel_santos.notinstagram.common.view.AbstractActivity;
 
 public class RegisterActivity extends AbstractActivity implements RegisterView {
 
+    private RegisterPresenter presenter;
+
     public static void launch(Context context) {
         Intent intent = new Intent(context, RegisterActivity.class);
         context.startActivity(intent);
@@ -25,10 +27,12 @@ public class RegisterActivity extends AbstractActivity implements RegisterView {
 
     @Override
     protected void onInject() {
-        RegisterEmailFragment fragment = new RegisterEmailFragment();
+        presenter = new RegisterPresenter();
+        RegisterEmailFragment fragment = RegisterEmailFragment.newInstance(presenter);
 
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
+        // TODO: 04/03/2021 Criar método de injeção de layout dinâmico
         transaction.add(R.id.register_fragment, fragment);
 
         transaction.commit();

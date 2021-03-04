@@ -11,7 +11,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
-public class RegisterEmailFragment extends AbstractFragment implements RegisterView.EmailView {
+public class RegisterEmailFragment extends AbstractFragment<RegisterPresenter> implements RegisterView.EmailView {
 
     @BindView(R.id.register_edt_email)
     EditText edtEmail;
@@ -24,14 +24,29 @@ public class RegisterEmailFragment extends AbstractFragment implements RegisterV
 
     }
 
+    public static RegisterEmailFragment newInstance(RegisterPresenter presenter) {
+        RegisterEmailFragment fragment = new RegisterEmailFragment();
+        // O fragment tem visão do método setPresenter pois ele herdou da classe AbstractFragment
+        fragment.setPresenter(presenter);
+        presenter.setEmailView(fragment);
+
+        return fragment;
+    }
+
+    @Override
+    public void showNextView() {
+
+    }
+
     @Override
     public void onFailureForm(String emailError) {
-
+        inputLayoutEmail.setError(emailError);
+        inputLayoutEmail.setBackground(findDrawable(R.drawable.edit_text_background_error));
     }
 
     @OnClick(R.id.register_btn_next)
     public void onButtonNextClick() {
-        // TODO: 03/03/2021 Criar verificação Regex para validar email. Este método sem encontra dentro da classe Strings
+        presenter.setEmail(edtEmail.getText().toString());
     }
 
     @OnClick(R.id.register_tev_login)
@@ -49,6 +64,16 @@ public class RegisterEmailFragment extends AbstractFragment implements RegisterV
             inputLayoutEmail.setError(null);
             inputLayoutEmail.setErrorEnabled(false);
         }
+    }
+
+    @Override
+    public void showProgressBar() {
+        btnNext.showProgress(true);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        btnNext.showProgress(false);
     }
 
     @Override

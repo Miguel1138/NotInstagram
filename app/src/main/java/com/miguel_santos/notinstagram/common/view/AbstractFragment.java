@@ -19,7 +19,10 @@ import com.miguel_santos.notinstagram.common.util.Drawables;
 
 import butterknife.ButterKnife;
 
-public abstract class AbstractFragment extends Fragment implements com.miguel_santos.notinstagram.common.view.View {
+public abstract class AbstractFragment<P> extends Fragment implements com.miguel_santos.notinstagram.common.view.View {
+
+    // tipagem do presenter.
+    protected P presenter;
 
     @Nullable
     @Override
@@ -31,6 +34,7 @@ public abstract class AbstractFragment extends Fragment implements com.miguel_sa
 
     @Override
     public void showProgressBar() {
+
     }
 
     @Override
@@ -49,6 +53,9 @@ public abstract class AbstractFragment extends Fragment implements com.miguel_sa
         return Colors.getColor(getContext(), colorId);
     }
 
+    public void setPresenter(P presenter) {
+        this.presenter = presenter;
+    }
 
     @Nullable
     @Override
