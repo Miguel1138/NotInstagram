@@ -1,26 +1,22 @@
 package com.miguel_santos.notinstagram.login.presentation;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
-
-import androidx.core.content.ContextCompat;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.miguel_santos.notinstagram.R;
 import com.miguel_santos.notinstagram.common.view.AbstractActivity;
 import com.miguel_santos.notinstagram.common.view.LoadingButton;
+import com.miguel_santos.notinstagram.login.datasource.LoginDataSource;
+import com.miguel_santos.notinstagram.login.datasource.LoginLocalDataSource;
+import com.miguel_santos.notinstagram.main.presentation.MainActivity;
+import com.miguel_santos.notinstagram.register.presentation.RegisterActivity;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 
-public class LoginActivity extends AbstractActivity implements LoginView, TextWatcher {
+public class LoginActivity extends AbstractActivity implements LoginView {
 
     @BindView(R.id.login_edt_email)
     EditText edtEmail;
@@ -33,18 +29,12 @@ public class LoginActivity extends AbstractActivity implements LoginView, TextWa
     @BindView(R.id.login_btn_enter)
     LoadingButton buttonEnter;
 
+    private LoginPresenter presenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(ContextCompat.getColor(this, R.color.black));
-        }
-
-        edtEmail.addTextChangedListener(this);
-        edtPassword.addTextChangedListener(this);
+        setStatusBarDark();
     }
 
     @Override
@@ -58,47 +48,53 @@ public class LoginActivity extends AbstractActivity implements LoginView, TextWa
     }
 
     @Override
-    public void onFailureForm(String emailError, String passwordError) {
-        if (emailError != null) {
-            textInputEmail.setError(emailError);
+    public void onFailureForm(String email, String password) {
+        if (email != null) {
+            textInputEmail.setError(email);
+            textInputEmail.setErrorIconDrawable(null);
             edtEmail.setBackground(findDrawable(R.drawable.edit_text_background_error));
         }
-        if (passwordError != null) {
-            textInputPassword.setError(passwordError);
+        if (password != null) {
+            textInputPassword.setError(password);
+            textInputPassword.setErrorIconDrawable(null);
             edtPassword.setBackground(findDrawable(R.drawable.edit_text_background_error));
         }
     }
 
     @Override
     public void onUserLogged() {
-        // TODO: 26/02/2021
+        MainActivity.launch(this);
     }
 
     @OnClick(R.id.login_btn_enter)
-    public void onButtonClick() {
-        // TODO: 27/02/2021 Criar camada de apresentação
-        buttonEnter.showProgress(true);
+    public void onButtonEnterClick() {
+        presenter.login(edtEmail.getText().toString(), edtPassword.getText().toString());
+    }
 
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            buttonEnter.showProgress(false);
-        }, 4000);
+    @OnClick(R.id.login_tev_register)
+    public void onTextViewRegisterClick() {
+        RegisterActivity.launch(this);
     }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    protected void onInject() {
+        LoginDataSource dataSource = new LoginLocalDataSource();
+        presenter = new LoginPresenter(this, dataSource);
     }
 
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (!s.toString().isEmpty()) {
-            buttonEnter.setEnabled(true);
-        } else {
-            buttonEnter.setEnabled(false);
+    @OnTextChanged({R.id.login_edt_email, R.id.login_edt_password})
+    public void onTextChanged(CharSequence s) {
+        buttonEnter.setEnabled(!edtEmail.getText().toString().isEmpty() &&
+                !edtPassword.getText().toString().isEmpty());
+        if (s.hashCode() == edtEmail.getText().hashCode()) {
+            edtEmail.setBackground(findDrawable(R.drawable.edit_text_background));
+            textInputEmail.setError(null);
+            textInputEmail.setErrorEnabled(false);
+        } else if (s.hashCode() == edtPassword.getText().hashCode()) {
+            edtPassword.setBackground(findDrawable(R.drawable.edit_text_background));
+            textInputPassword.setError(null);
+            textInputPassword.setErrorEnabled(false);
         }
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
     }
 
     @Override
