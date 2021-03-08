@@ -12,7 +12,7 @@ public class LoginLocalDataSource implements LoginDataSource {
                 .addOnSuccessListener(
                         (Database.OnSuccessListener<UserAuth>) response -> presenter.onSuccess(response))
                 .addOnFailureListener(e -> presenter.onError(e.getMessage()))
-                .addOnCompleteListener(() -> presenter.onCompleted());
+                .addOnCompleteListener(() -> presenter.onComplete());
     }
 
 }

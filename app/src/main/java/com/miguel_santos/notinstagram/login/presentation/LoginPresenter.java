@@ -6,7 +6,7 @@ import com.miguel_santos.notinstagram.common.presenter.Presenter;
 import com.miguel_santos.notinstagram.common.util.Strings;
 import com.miguel_santos.notinstagram.login.datasource.LoginDataSource;
 
-public class LoginPresenter implements Presenter {
+public class LoginPresenter implements Presenter<UserAuth> {
 
     private final LoginView view;
     private final LoginDataSource dataSource;
@@ -21,7 +21,6 @@ public class LoginPresenter implements Presenter {
             view.onFailureForm(view.getContext().getString(R.string.invalid_email), null);
             return;
         }
-
         view.showProgressBar();
         dataSource.login(email, password, this);
     }
@@ -37,7 +36,7 @@ public class LoginPresenter implements Presenter {
     }
 
     @Override
-    public void onCompleted() {
+    public void onComplete() {
         view.hideProgressBar();
     }
 

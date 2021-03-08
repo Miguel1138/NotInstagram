@@ -9,6 +9,7 @@ public class Database {
 
     private static Database INSTANCE;
     private static Set<UserAuth> usersAuth;
+    private static Set<User> users;
 
     private OnSuccessListener onSuccessListener;
     private OnFailureListener onFailureListener;
@@ -17,6 +18,7 @@ public class Database {
 
     static {
         usersAuth = new HashSet<>();
+        users = new HashSet<>();
 
         //usersAuth.add(new UserAuth("user1@gmail.com", "1234"));
         //usersAuth.add(new UserAuth("user2@gmail.com", "12345"));
@@ -32,6 +34,31 @@ public class Database {
             INSTANCE = new Database();
         }
         return INSTANCE;
+    }
+
+    public Database createUser(String name, String email, String password) {
+        timeOut(() -> {
+            UserAuth userAuth = new UserAuth();
+            userAuth.setEmail(email);
+            userAuth.setPassword(password);
+
+            usersAuth.add(userAuth);
+
+            User user = new User();
+            user.setEmail(email);
+            user.setName(name);
+
+            boolean added = users.add(user);
+            if (added) {
+                this.userAuth = userAuth;
+                onSuccessListener.onSuccess(userAuth);
+            } else {
+                this.userAuth = null;
+                onFailureListener.onFailure(new IllegalArgumentException("Usuário já cadastrado!"));
+            }
+            onCompleteListener.onComplete();
+        });
+        return this;
     }
 
     public Database login(String email, String password) {

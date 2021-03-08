@@ -26,16 +26,10 @@ public class RegisterEmailFragment extends AbstractFragment<RegisterPresenter> i
 
     public static RegisterEmailFragment newInstance(RegisterPresenter presenter) {
         RegisterEmailFragment fragment = new RegisterEmailFragment();
-        // O fragment tem visão do método setPresenter pois ele herdou da classe AbstractFragment
         fragment.setPresenter(presenter);
         presenter.setEmailView(fragment);
 
         return fragment;
-    }
-
-    @Override
-    public void showNextView() {
-
     }
 
     @Override
