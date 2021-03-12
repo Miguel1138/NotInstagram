@@ -1,5 +1,7 @@
 package com.miguel_santos.notinstagram.register.presentation;
 
+import android.net.Uri;
+
 import com.miguel_santos.notinstagram.R;
 import com.miguel_santos.notinstagram.common.model.UserAuth;
 import com.miguel_santos.notinstagram.common.presenter.Presenter;
@@ -12,11 +14,13 @@ public class RegisterPresenter implements Presenter<UserAuth> {
     private RegisterView.EmailView emailView;
     private RegisterView.NamePasswordView namePasswordView;
     private RegisterView.WelcomeView welcomeView;
+    private RegisterView.PhotoView photoView;
+
+    private final RegisterLocalDataSource dataSource;
 
     private String email;
     private String name;
-    private String password;
-    private final RegisterLocalDataSource dataSource;
+    private Uri uri;
 
     public RegisterPresenter(RegisterLocalDataSource dataSource) {
         this.dataSource = dataSource;
@@ -38,8 +42,21 @@ public class RegisterPresenter implements Presenter<UserAuth> {
         this.welcomeView = welcomeView;
     }
 
+    public void setPhotoView(RegisterView.PhotoView photoView) {
+        this.photoView = photoView;
+    }
+
+    public void setUri(Uri uri) {
+        this.uri = uri;
+        photoView.onImageCropped(uri);
+    }
+
     public String getName() {
         return name;
+    }
+
+    public RegisterView.EmailView getEmailView() {
+        return emailView;
     }
 
     public void setEmail(String email) {
@@ -58,10 +75,9 @@ public class RegisterPresenter implements Presenter<UserAuth> {
         }
         // Guardando os dados para futura inserção no banco de dados
         this.name = name;
-        this.password = password;
 
         namePasswordView.showProgressBar();
-        dataSource.createUser(this.name, this.email, this.password, this);
+        dataSource.createUser(name, email, password, this);
     }
 
     @Override
@@ -81,6 +97,14 @@ public class RegisterPresenter implements Presenter<UserAuth> {
 
     public void showPhotoView() {
         registerView.showNextView(RegisterSteps.PHOTO);
+    }
+
+    public void showCamera() {
+        registerView.showCamera();
+    }
+
+    public void showGallery() {
+        registerView.showGallery();
     }
 
     public void jumpRegistration() {

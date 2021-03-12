@@ -5,8 +5,8 @@ import android.widget.EditText;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.miguel_santos.notinstagram.R;
+import com.miguel_santos.notinstagram.common.components.LoadingButton;
 import com.miguel_santos.notinstagram.common.view.AbstractActivity;
-import com.miguel_santos.notinstagram.common.view.LoadingButton;
 import com.miguel_santos.notinstagram.login.datasource.LoginDataSource;
 import com.miguel_santos.notinstagram.login.datasource.LoginLocalDataSource;
 import com.miguel_santos.notinstagram.main.presentation.MainActivity;

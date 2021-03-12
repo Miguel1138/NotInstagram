@@ -7,11 +7,14 @@
     android:orientation="vertical"
     tools:context=".register.presentation.RegisterActivity">
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/register_camera_icon"
         android:layout_width="wrap_content"
         android:layout_height="120dp"
         android:layout_gravity="center"
-        android:src="@drawable/camera_icon" />
+        android:src="@drawable/camera_icon"
+        app:civ_border_color="@color/grayBorder"
+        app:civ_border_width="1dp" />
 
     <TextView
         style="@style/InstaTextViewbaseForm"
@@ -24,7 +27,7 @@
         android:layout_gravity="center"
         android:text="@string/photo_register_subtitle" />
 
-    <com.miguel_santos.notinstagram.common.view.LoadingButton
+    <com.miguel_santos.notinstagram.common.components.LoadingButton
         android:id="@+id/register_btn_next"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

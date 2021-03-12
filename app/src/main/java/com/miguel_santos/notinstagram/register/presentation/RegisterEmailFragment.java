@@ -4,8 +4,8 @@ import android.widget.EditText;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.miguel_santos.notinstagram.R;
+import com.miguel_santos.notinstagram.common.components.LoadingButton;
 import com.miguel_santos.notinstagram.common.view.AbstractFragment;
-import com.miguel_santos.notinstagram.common.view.LoadingButton;
 
 import butterknife.BindView;
 import butterknife.OnClick;

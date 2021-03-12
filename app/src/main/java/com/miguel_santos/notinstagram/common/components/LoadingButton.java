@@ -1,4 +1,4 @@
-package com.miguel_santos.notinstagram.common.view;
+package com.miguel_santos.notinstagram.common.components;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -44,8 +44,8 @@ public class LoadingButton extends FrameLayout {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.button_loading, this, true);
 
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.TestButton, 0, 0);
-        text = typedArray.getString(R.styleable.TestButton_text);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LoadingButton, 0, 0);
+        text = typedArray.getString(R.styleable.LoadingButton_text);
         typedArray.recycle();
 
         button = (AppCompatButton) getChildAt(0);

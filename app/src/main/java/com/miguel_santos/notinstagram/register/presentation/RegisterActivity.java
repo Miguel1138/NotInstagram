@@ -2,27 +2,41 @@ package com.miguel_santos.notinstagram.register.presentation;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.widget.LinearLayout;
+import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.miguel_santos.notinstagram.R;
+import com.miguel_santos.notinstagram.common.components.MediaHelper;
 import com.miguel_santos.notinstagram.common.view.AbstractActivity;
 import com.miguel_santos.notinstagram.main.presentation.MainActivity;
 import com.miguel_santos.notinstagram.register.datasource.RegisterLocalDataSource;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
-public class RegisterActivity extends AbstractActivity implements RegisterView {
+public class RegisterActivity extends AbstractActivity implements RegisterView, MediaHelper.onImageCroppedListener {
 
     private RegisterPresenter presenter;
+
+    @BindView(R.id.register_root_container)
+    FrameLayout rootContainer;
     @BindView(R.id.register_scroll_view)
     ScrollView scrollView;
+    @BindView(R.id.register_image_crop)
+    CropImageView cropImage;
+    @BindView(R.id.register_btn_crop)
+    Button btnCrop;
 
     public static void launch(Context context) {
         Intent intent = new Intent(context, RegisterActivity.class);
@@ -47,27 +61,24 @@ public class RegisterActivity extends AbstractActivity implements RegisterView {
     @Override
     public void showNextView(RegisterSteps step) {
         Fragment fragment = null;
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) scrollView.getLayoutParams();
 
         switch (step) {
             case EMAIL:
-                layoutParams.gravity = Gravity.BOTTOM;
                 fragment = RegisterEmailFragment.newInstance(presenter);
                 break;
             case NAME_PASSWORD:
-                layoutParams.gravity = Gravity.BOTTOM;
                 fragment = RegisterNamePasswordFragment.newInstance(presenter);
                 break;
             case WELCOME:
-                layoutParams.gravity = Gravity.BOTTOM;
                 fragment = RegisterWelcomeFragment.newInstance(presenter);
                 break;
             case PHOTO:
+                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) scrollView.getLayoutParams();
                 layoutParams.gravity = Gravity.TOP;
+                scrollView.setLayoutParams(layoutParams);
                 fragment = RegisterPhotoFragment.newInstance(presenter);
                 break;
         }
-        scrollView.setLayoutParams(layoutParams);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
 
@@ -82,8 +93,46 @@ public class RegisterActivity extends AbstractActivity implements RegisterView {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        cropViewImageEnabled(true);
+        MediaHelper mediaHelper = MediaHelper.getInstance(this);
+        mediaHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void cropViewImageEnabled(boolean enabled) {
+        scrollView.setVisibility(enabled ? View.GONE : View.VISIBLE);
+        btnCrop.setVisibility(enabled ? View.VISIBLE : View.GONE);
+        rootContainer.setBackgroundColor(enabled ? findColor(R.color.black) : findColor(R.color.white));
+    }
+
+    @Override
+    public void onImageCropped(Uri uri) {
+        presenter.setUri(uri);
+    }
+
+    @Override
     public void onUserCreated() {
         MainActivity.launch(this);
+    }
+
+    @Override
+    public void showCamera() {
+        // TODO: 12/03/2021
+    }
+
+    @Override
+    public void showGallery() {
+        MediaHelper.getInstance(this)
+                .listener(this)
+                .cropView(cropImage)
+                .chooseGallery();
+    }
+
+    @OnClick(R.id.register_btn_crop)
+    public void onCropButtonClick() {
+        cropViewImageEnabled(false);
+        MediaHelper.getInstance(this).cropImage();
     }
 
     @Override

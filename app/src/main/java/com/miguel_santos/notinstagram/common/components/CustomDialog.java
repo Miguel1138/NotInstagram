@@ -1,4 +1,4 @@
-package com.miguel_santos.notinstagram.common.view;
+package com.miguel_santos.notinstagram.common.components;
 
 import android.app.Dialog;
 import android.content.Context;
