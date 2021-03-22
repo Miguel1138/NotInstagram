@@ -28,13 +28,14 @@ import butterknife.OnClick;
 public class RegisterActivity extends AbstractActivity implements RegisterView, MediaHelper.onImageCroppedListener {
 
     private RegisterPresenter presenter;
+    private MediaHelper mediaHelper;
 
     @BindView(R.id.register_root_container)
     FrameLayout rootContainer;
     @BindView(R.id.register_scroll_view)
     ScrollView scrollView;
     @BindView(R.id.register_image_crop)
-    CropImageView cropImage;
+    CropImageView cropImageView;
     @BindView(R.id.register_btn_crop)
     Button btnCrop;
 
@@ -47,6 +48,10 @@ public class RegisterActivity extends AbstractActivity implements RegisterView, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStatusBarDark();
+
+        mediaHelper = MediaHelper.getInstance(this)
+                .cropView(cropImageView)
+                .listener(this);
     }
 
     @Override
@@ -101,6 +106,7 @@ public class RegisterActivity extends AbstractActivity implements RegisterView, 
     }
 
     private void cropViewImageEnabled(boolean enabled) {
+        cropImageView.setVisibility(enabled ? View.VISIBLE : View.GONE);
         scrollView.setVisibility(enabled ? View.GONE : View.VISIBLE);
         btnCrop.setVisibility(enabled ? View.VISIBLE : View.GONE);
         rootContainer.setBackgroundColor(enabled ? findColor(R.color.black) : findColor(R.color.white));
@@ -112,27 +118,29 @@ public class RegisterActivity extends AbstractActivity implements RegisterView, 
     }
 
     @Override
+    public void onImagePicked(Uri uri) {
+        cropImageView.setImageUriAsync(uri);
+    }
+
+    @Override
     public void onUserCreated() {
         MainActivity.launch(this);
     }
 
     @Override
     public void showCamera() {
-        // TODO: 12/03/2021
+        mediaHelper.chooseCamera();
     }
 
     @Override
     public void showGallery() {
-        MediaHelper.getInstance(this)
-                .listener(this)
-                .cropView(cropImage)
-                .chooseGallery();
+        mediaHelper.chooseGallery();
     }
 
     @OnClick(R.id.register_btn_crop)
     public void onCropButtonClick() {
         cropViewImageEnabled(false);
-        MediaHelper.getInstance(this).cropImage();
+        MediaHelper.getInstance(this).cropImage(cropImageView);
     }
 
     @Override
