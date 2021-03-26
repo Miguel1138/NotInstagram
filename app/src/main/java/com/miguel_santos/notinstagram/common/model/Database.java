@@ -1,5 +1,6 @@
 package com.miguel_santos.notinstagram.common.model;
 
+import android.net.Uri;
 import android.os.Handler;
 
 import java.util.HashSet;
@@ -10,6 +11,7 @@ public class Database {
     private static Database INSTANCE;
     private static Set<UserAuth> usersAuth;
     private static Set<User> users;
+    private static Set<Uri> storages;
 
     private OnSuccessListener onSuccessListener;
     private OnFailureListener onFailureListener;
@@ -19,6 +21,7 @@ public class Database {
     static {
         usersAuth = new HashSet<>();
         users = new HashSet<>();
+        storages = new HashSet<>();
 
         //usersAuth.add(new UserAuth("user1@gmail.com", "1234"));
         //usersAuth.add(new UserAuth("user2@gmail.com", "12345"));
@@ -32,12 +35,47 @@ public class Database {
     public static Database getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new Database();
+            INSTANCE.init();
         }
+
         return INSTANCE;
     }
 
+    public void init() {
+        String email = "user1@gmail.com";
+        String password = "123";
+        String name = "user1";
+
+        UserAuth userAuth = new UserAuth();
+        userAuth.setEmail(email);
+        userAuth.setPassword(password);
+
+        usersAuth.add(userAuth);
+
+        User user = new User();
+        user.setEmail(email);
+        user.setName(name);
+        user.setUuid(userAuth.getUUID());
+
+        users.add(user);
+        this.userAuth = userAuth;
+    }
+
+    public Database addPhoto(String uuid, Uri uri) {
+        timeout(() -> {
+            Set<User> users = Database.users;
+            for (User user : users) {
+                if (user.getUuid().equals(uuid))
+                    user.setUri(uri);
+            }
+            storages.add(uri);
+            onSuccessListener.onSuccess(true);
+        });
+        return this;
+    }
+
     public Database createUser(String name, String email, String password) {
-        timeOut(() -> {
+        timeout(() -> {
             UserAuth userAuth = new UserAuth();
             userAuth.setEmail(email);
             userAuth.setPassword(password);
@@ -47,22 +85,26 @@ public class Database {
             User user = new User();
             user.setEmail(email);
             user.setName(name);
+            user.setUuid(userAuth.getUUID());
 
             boolean added = users.add(user);
             if (added) {
                 this.userAuth = userAuth;
-                onSuccessListener.onSuccess(userAuth);
+                if (onSuccessListener != null)
+                    onSuccessListener.onSuccess(userAuth);
             } else {
                 this.userAuth = null;
-                onFailureListener.onFailure(new IllegalArgumentException("Usuário já cadastrado!"));
+                if (onFailureListener != null)
+                    onFailureListener.onFailure(new IllegalArgumentException("Usuário já cadastrado!"));
             }
-            onCompleteListener.onComplete();
+            if (onCompleteListener != null)
+                onCompleteListener.onComplete();
         });
         return this;
     }
 
     public Database login(String email, String password) {
-        timeOut(() -> {
+        timeout(() -> {
             UserAuth userAuth = new UserAuth();
             userAuth.setEmail(email);
             userAuth.setPassword(password);
@@ -78,8 +120,12 @@ public class Database {
         return this;
     }
 
+    public UserAuth getUser() {
+        return userAuth;
+    }
+
     // Simulando latencia de servidor
-    private void timeOut(Runnable r) {
+    private void timeout(Runnable r) {
         new Handler().postDelayed(r, 2000);
     }
 

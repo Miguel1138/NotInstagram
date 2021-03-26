@@ -1,5 +1,7 @@
 package com.miguel_santos.notinstagram.register.datasource;
 
+import android.net.Uri;
+
 import com.miguel_santos.notinstagram.common.model.Database;
 import com.miguel_santos.notinstagram.common.model.UserAuth;
 import com.miguel_santos.notinstagram.common.presenter.Presenter;
@@ -14,4 +16,10 @@ public class RegisterLocalDataSource implements RegisterDataSource {
                 .addOnCompleteListener(presenter::onComplete);
     }
 
+    @Override
+    public void addPhoto(Uri uri, Presenter presenter) {
+        Database db = Database.getInstance();
+        db.addPhoto(db.getUser().getUUID(), uri)
+                .addOnSuccessListener((Database.OnSuccessListener<Boolean>) presenter::onSuccess);
+    }
 }

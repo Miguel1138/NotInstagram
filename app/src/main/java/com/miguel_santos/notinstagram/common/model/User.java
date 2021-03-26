@@ -1,9 +1,14 @@
 package com.miguel_santos.notinstagram.common.model;
 
+import android.net.Uri;
+
 public class User {
 
+    //UserId
+    private String uuid;
     private String name;
     private String email;
+    private Uri uri;
 
     public String getName() {
         return name;
@@ -19,6 +24,22 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public Uri getUri() {
+        return uri;
+    }
+
+    public void setUri(Uri uri) {
+        this.uri = uri;
     }
 
     @Override

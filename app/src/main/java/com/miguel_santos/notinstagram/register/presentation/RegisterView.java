@@ -33,7 +33,7 @@ public interface RegisterView {
     interface WelcomeView {
     }
 
-    interface PhotoView {
+    interface PhotoView extends View{
 
         void onImageCropped(Uri uri);
     }
