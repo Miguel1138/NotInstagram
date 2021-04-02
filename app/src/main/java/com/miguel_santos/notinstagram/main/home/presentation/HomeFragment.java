@@ -15,10 +15,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.miguel_santos.notinstagram.R;
+import com.miguel_santos.notinstagram.main.presentation.MainView;
 
 public class HomeFragment extends Fragment {
 
+    private MainView mainView;
+
     public HomeFragment() {
+    }
+
+    public static HomeFragment newInstance(MainView mainView) {
+        HomeFragment homeFragment = new HomeFragment();
+        homeFragment.setMainView(mainView);
+        return  homeFragment;
+    }
+
+    private void setMainView(MainView mainView) {
+        this.mainView = mainView;
     }
 
     @Nullable

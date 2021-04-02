@@ -10,23 +10,39 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.miguel_santos.notinstagram.R;
+import com.miguel_santos.notinstagram.common.view.AbstractFragment;
+import com.miguel_santos.notinstagram.main.presentation.MainView;
 
-public class ProfileFragment extends Fragment {
+import butterknife.BindView;
+
+public class ProfileFragment extends AbstractFragment<ProfilePresenter> {
+
+    private MainView mainView;
+    @BindView(R.id.profile_recycler)
+    RecyclerView recyclerView;
 
     public ProfileFragment() {
+    }
+
+    public static ProfileFragment newInstance(MainView mainView) {
+        ProfileFragment profileFragment = new ProfileFragment();
+        profileFragment.setMainView(mainView);
+        return profileFragment;
+    }
+
+    private void setMainView(MainView mainView) {
+        this.mainView = mainView;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // TODO: 22/02/2021 app:layout_scroll_flags="scroll" at toolbar
-        View view = inflater.inflate(R.layout.fragment_main_profile, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.profile_recycler);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         recyclerView.setAdapter(new PostAdapter());
@@ -46,9 +62,24 @@ public class ProfileFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @Override
+    protected int getLayout() {
+        return R.layout.fragment_main_profile;
+    }
+
     private class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
 
         private int[] fakeImages = new int[]{
+                R.drawable.ic_insta_add,
+                R.drawable.ic_insta_add,
+                R.drawable.ic_insta_add,
+                R.drawable.ic_insta_add,
+                R.drawable.ic_insta_add,
+                R.drawable.ic_insta_add,
+                R.drawable.ic_insta_add,
+                R.drawable.ic_insta_add,
+                R.drawable.ic_insta_add,
+                R.drawable.ic_insta_add,
                 R.drawable.ic_insta_add,
                 R.drawable.ic_insta_add,
                 R.drawable.ic_insta_add,
@@ -76,6 +107,7 @@ public class ProfileFragment extends Fragment {
         public int getItemCount() {
             return fakeImages.length;
         }
+
     }
 
     private static class PostViewHolder extends RecyclerView.ViewHolder {
@@ -90,6 +122,7 @@ public class ProfileFragment extends Fragment {
         public void bind(int image) {
             this.imagePost.setImageResource(image);
         }
+
     }
 
 }

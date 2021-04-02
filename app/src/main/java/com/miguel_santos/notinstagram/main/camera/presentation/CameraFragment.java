@@ -12,10 +12,23 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.miguel_santos.notinstagram.R;
+import com.miguel_santos.notinstagram.main.presentation.MainView;
 
 public class CameraFragment extends Fragment {
 
+    private MainView mainView;
+
     public CameraFragment() {
+    }
+
+    public static CameraFragment newInstance(MainView mainView) {
+        CameraFragment cameraFragment = new CameraFragment();
+        cameraFragment.setMainView(mainView);
+        return cameraFragment;
+    }
+
+    private void setMainView(MainView mainView) {
+        this.mainView = mainView;
     }
 
     @Override
