@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,7 +20,10 @@ import com.miguel_santos.notinstagram.R;
 import com.miguel_santos.notinstagram.common.view.AbstractActivity;
 import com.miguel_santos.notinstagram.main.camera.presentation.CameraFragment;
 import com.miguel_santos.notinstagram.main.home.presentation.HomeFragment;
+import com.miguel_santos.notinstagram.main.profile.datasource.ProfileDataSource;
+import com.miguel_santos.notinstagram.main.profile.datasource.ProfileLocalDataSource;
 import com.miguel_santos.notinstagram.main.profile.presentation.ProfileFragment;
+import com.miguel_santos.notinstagram.main.profile.presentation.ProfilePresenter;
 import com.miguel_santos.notinstagram.main.search.presentation.SearchFragment;
 
 public class MainActivity extends AbstractActivity implements BottomNavigationView.OnNavigationItemSelectedListener, MainView {
@@ -124,9 +128,22 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
     }
 
     @Override
+    public void showProgressBar() {
+        findViewById(R.id.main_progress_bar).setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        findViewById(R.id.main_progress_bar).setVisibility(View.GONE);
+    }
+
+    @Override
     protected void onInject() {
+        ProfileDataSource profileDataSource = new ProfileLocalDataSource();
+        ProfilePresenter profilePresenter = new ProfilePresenter(profileDataSource);
+
         homeFragment = HomeFragment.newInstance(this);
-        profileFragment = ProfileFragment.newInstance(this);
+        profileFragment = ProfileFragment.newInstance(this, profilePresenter);
         cameraFragment = CameraFragment.newInstance(this);
         searchFragment = SearchFragment.newInstance(this);
 
