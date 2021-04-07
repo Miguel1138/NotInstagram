@@ -15,17 +15,21 @@ public class Database {
     private static Set<User> users;
     private static Set<Uri> storages;
     private static HashMap<String, HashSet<Post>> posts;
+    private static HashMap<String, HashSet<Feed>> feed;
 
     private OnSuccessListener onSuccessListener;
     private OnFailureListener onFailureListener;
     private OnCompleteListener onCompleteListener;
-    private UserAuth userAuth;
+    private static UserAuth userAuth;
 
     static {
         usersAuth = new HashSet<>();
         users = new HashSet<>();
         storages = new HashSet<>();
         posts = new HashMap<>();
+        feed = new HashMap<>();
+
+        init();
 
         //usersAuth.add(new UserAuth("user1@gmail.com", "1234"));
         //usersAuth.add(new UserAuth("user2@gmail.com", "12345"));
@@ -37,14 +41,15 @@ public class Database {
 
     // Padrão Singleton
     public static Database getInstance() {
-        if (INSTANCE == null) {
+        return new Database();
+        /*if (INSTANCE == null) {
             INSTANCE = new Database();
             INSTANCE.init();
         }
-        return INSTANCE;
+        return INSTANCE;*/
     }
 
-    public void init() {
+    public static void init() {
         String email = "user1@gmail.com";
         String password = "123";
         String name = "Miguel";
@@ -61,7 +66,7 @@ public class Database {
         user.setUuid(userAuth.getUUID());
 
         users.add(user);
-        this.userAuth = userAuth;
+        Database.userAuth = userAuth;
     }
 
     public Database addPhoto(String uuid, Uri uri) {
@@ -92,11 +97,11 @@ public class Database {
 
             boolean added = users.add(user);
             if (added) {
-                this.userAuth = userAuth;
+                Database.userAuth = userAuth;
                 if (onSuccessListener != null)
                     onSuccessListener.onSuccess(userAuth);
             } else {
-                this.userAuth = null;
+                Database.userAuth = null;
                 if (onFailureListener != null)
                     onFailureListener.onFailure(new IllegalArgumentException("Usuário já cadastrado!"));
             }
@@ -112,10 +117,10 @@ public class Database {
             userAuth.setEmail(email);
             userAuth.setPassword(password);
             if (usersAuth.contains(userAuth)) {
-                this.userAuth = userAuth;
+                Database.userAuth = userAuth;
                 onSuccessListener.onSuccess(userAuth);
             } else {
-                this.userAuth = null;
+                Database.userAuth = null;
                 onFailureListener.onFailure(new IllegalArgumentException("Usuário não encontrado! "));
             }
             onCompleteListener.onComplete();
@@ -144,6 +149,22 @@ public class Database {
 
     public Database addOnCompleteListener(OnCompleteListener listener) {
         this.onCompleteListener = listener;
+        return this;
+    }
+
+    public Database findFeed(String uuid) {
+        timeout(() -> {
+            HashMap<String, HashSet<Feed>> feed = Database.feed;
+            HashSet<Feed> res = feed.get(uuid);
+
+            if (res == null)
+                res = new HashSet<>();
+
+            if (onSuccessListener != null)
+                onSuccessListener.onSuccess(new ArrayList<>(res));
+            if (onCompleteListener != null)
+                onCompleteListener.onComplete();
+        });
         return this;
     }
 

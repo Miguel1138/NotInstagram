@@ -19,7 +19,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.miguel_santos.notinstagram.R;
 import com.miguel_santos.notinstagram.common.view.AbstractActivity;
 import com.miguel_santos.notinstagram.main.camera.presentation.CameraFragment;
+import com.miguel_santos.notinstagram.main.home.datasource.HomeDataSource;
+import com.miguel_santos.notinstagram.main.home.datasource.HomeLocalDataSource;
 import com.miguel_santos.notinstagram.main.home.presentation.HomeFragment;
+import com.miguel_santos.notinstagram.main.home.presentation.HomePresenter;
 import com.miguel_santos.notinstagram.main.profile.datasource.ProfileDataSource;
 import com.miguel_santos.notinstagram.main.profile.datasource.ProfileLocalDataSource;
 import com.miguel_santos.notinstagram.main.profile.presentation.ProfileFragment;
@@ -31,6 +34,9 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
     public static final String ACT_SOURCE = "act_source";
     public static final int LOGIN_ACTIVITY = 0;
     public static final int REGISTER_ACTIVITY = 1;
+
+    private ProfilePresenter profilePresenter;
+    private HomePresenter homePresenter;
 
     Fragment homeFragment;
     Fragment profileFragment;
@@ -110,6 +116,11 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
             case R.id.menu_bottom_home:
                 manager.beginTransaction().hide(active).show(homeFragment).commit();
                 active = homeFragment;
+                homePresenter.findFeed();
+                return true;
+            case R.id.menu_bottom_search:
+                manager.beginTransaction().hide(active).show(searchFragment).commit();
+                active = searchFragment;
                 return true;
             case R.id.menu_bottom_add:
                 manager.beginTransaction().hide(active).show(cameraFragment).commit();
@@ -118,10 +129,7 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
             case R.id.menu_bottom_profile:
                 manager.beginTransaction().hide(active).show(profileFragment).commit();
                 active = profileFragment;
-                return true;
-            case R.id.menu_bottom_search:
-                manager.beginTransaction().hide(active).show(searchFragment).commit();
-                active = searchFragment;
+                profilePresenter.findUser();
                 return true;
         }
         return false;
@@ -140,9 +148,12 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
     @Override
     protected void onInject() {
         ProfileDataSource profileDataSource = new ProfileLocalDataSource();
-        ProfilePresenter profilePresenter = new ProfilePresenter(profileDataSource);
+        HomeDataSource homeDataSource = new HomeLocalDataSource();
 
-        homeFragment = HomeFragment.newInstance(this);
+        profilePresenter = new ProfilePresenter(profileDataSource);
+        homePresenter = new HomePresenter(homeDataSource);
+
+        homeFragment = HomeFragment.newInstance(this, homePresenter);
         profileFragment = ProfileFragment.newInstance(this, profilePresenter);
         cameraFragment = CameraFragment.newInstance(this);
         searchFragment = SearchFragment.newInstance(this);

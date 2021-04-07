@@ -10,24 +10,35 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.miguel_santos.notinstagram.R;
+import com.miguel_santos.notinstagram.common.model.Feed;
+import com.miguel_santos.notinstagram.common.view.AbstractFragment;
 import com.miguel_santos.notinstagram.main.presentation.MainView;
 
-public class HomeFragment extends Fragment {
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+
+public class HomeFragment extends AbstractFragment<HomePresenter> implements MainView.HomeView {
 
     private MainView mainView;
+    private FeedAdapter adapter;
+    @BindView(R.id.home_recycler)
+    RecyclerView recyclerView;
 
     public HomeFragment() {
     }
 
-    public static HomeFragment newInstance(MainView mainView) {
+    public static HomeFragment newInstance(MainView mainView, HomePresenter homePresenter) {
         HomeFragment homeFragment = new HomeFragment();
+        homeFragment.setPresenter(homePresenter);
         homeFragment.setMainView(mainView);
-        return  homeFragment;
+        homePresenter.setView(homeFragment);
+        return homeFragment;
     }
 
     private void setMainView(MainView mainView) {
@@ -38,11 +49,11 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // TODO: 22/02/2021 app:layout_scroll_flags="scroll" at toolbar
-        View view = inflater.inflate(R.layout.fragment_main_home, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.home_recycler);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
 
+        adapter = new FeedAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
-        recyclerView.setAdapter(new PostAdapter());
+        recyclerView.setAdapter(adapter);
 
         return view;
     }
@@ -59,49 +70,64 @@ public class HomeFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
+    @Override
+    public void showProgressBar() {
+        mainView.showProgressBar();
+    }
 
-        private int[] fakeImages = new int[]{
-                R.drawable.ic_insta_add,
-                R.drawable.ic_insta_add,
-                R.drawable.ic_insta_add,
-                R.drawable.ic_insta_add,
-                R.drawable.ic_insta_add,
-                R.drawable.ic_insta_add,
-                R.drawable.ic_insta_add,
-                R.drawable.ic_insta_add,
-                R.drawable.ic_insta_add,
-                R.drawable.ic_insta_add
-        };
+    @Override
+    public void hideProgressBar() {
+        mainView.hideProgressBar();
+    }
+
+    @Override
+    public void showFeed(List<Feed> response) {
+        adapter.setFeed(response);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected int getLayout() {
+        return R.layout.fragment_main_home;
+    }
+
+    private class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
+
+        private List<Feed> feed = new ArrayList<>();
 
         @NonNull
         @Override
-        public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new PostViewHolder(getLayoutInflater().inflate(R.layout.item_post_list, parent, false));
+        public FeedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new FeedViewHolder(getLayoutInflater().inflate(R.layout.item_post_list, parent, false));
         }
 
         @Override
-        public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
-            holder.bind(fakeImages[position]);
+        public void onBindViewHolder(@NonNull FeedViewHolder holder, int position) {
+            holder.bind(feed.get(position));
         }
 
         @Override
         public int getItemCount() {
-            return fakeImages.length;
+            return feed.size();
+        }
+
+        public void setFeed(List<Feed> feed) {
+            this.feed = feed;
         }
     }
 
-    private static class PostViewHolder extends RecyclerView.ViewHolder {
+    private static class FeedViewHolder extends RecyclerView.ViewHolder {
 
         private final ImageView imagePost;
 
-        public PostViewHolder(@NonNull View itemView) {
+        public FeedViewHolder(@NonNull View itemView) {
             super(itemView);
             imagePost = itemView.findViewById(R.id.profile_image_grid);
         }
 
-        public void bind(int image) {
-            this.imagePost.setImageResource(image);
+        public void bind(Feed feed) {
+            // TODO: 07/04/2021
+            this.imagePost.setImageURI(feed.getUri());
         }
     }
 
