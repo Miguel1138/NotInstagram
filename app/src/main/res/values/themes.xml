@@ -16,7 +16,9 @@
 
     <style name="Theme.NotInstagram.NoActionBar" parent="Theme.NotInstagram">
         <item name="windowActionBar">false</item>
-        <item name="windowNoTitle"> true</item>
+        <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="Theme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
 </resources>

@@ -11,6 +11,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -25,6 +26,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NotInstagram"
         tools:ignore="GoogleAppIndexingWarning">
+
+        <activity
+            android:name=".main.camera.presentation.AddActivity"
+            android:label="@string/photo"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.NotInstagram.NoActionBar" />
         <activity
             android:name=".main.presentation.MainActivity"
             android:theme="@style/Theme.NotInstagram.NoActionBar" />
@@ -38,7 +45,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
@@ -50,7 +56,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 

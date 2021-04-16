@@ -6,10 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
@@ -29,19 +31,21 @@ import static android.app.Activity.RESULT_OK;
 public class MediaHelper {
 
     public interface onImageCroppedListener {
+
         void onImageCropped(Uri uri);
 
         void onImagePicked(Uri uri);
+
     }
 
     private static final int CAMERA_CODE = 1;
     private static final int GALLERY_CODE = 2;
     private static WeakReference<MediaHelper> INSTANCE;
-
     private Activity activity;
-    private Fragment fragment;
 
+    private Fragment fragment;
     private Uri mCropImageUri;
+
     private onImageCroppedListener listener;
     private Uri mSavedImageUri;
 
@@ -173,6 +177,47 @@ public class MediaHelper {
         String imageFileName = "JPEG_" + timestamp + "_";
         File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         return File.createTempFile(imageFileName, ".jpeg", storageDir);
+    }
+
+    public boolean checkCameraHardware(Context context) {
+        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
+    }
+
+    public Camera getCameraInstance() {
+        Camera camera = null;
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                    && getContext() != null
+                    && getContext().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                if (activity != null)
+                    activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, 300);
+                else
+                    fragment.requestPermissions(new String[]{Manifest.permission.CAMERA}, 300);
+            }
+            camera = camera.open();
+        } catch (Exception e) {
+
+        }
+        return camera;
+    }
+
+    public void saveCameraFile(byte[] data) {
+        File pictureFile = createCameraFile(true);
+    }
+
+    private File createCameraFile(boolean temp) {
+        if(getContext() == null) return null;
+
+        File mediaStorageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (mediaStorageDir != null && !mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d("TESTE", "failed to create Directory");
+                return null;
+            }
+        }
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        return new File(mediaStorageDir.getPath() + File.separator + (temp ? "TEMP_" : "IMG_") + timestamp + ".jpg");
     }
 
 }

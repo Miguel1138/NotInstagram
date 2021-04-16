@@ -48,7 +48,6 @@ public class HomeFragment extends AbstractFragment<HomePresenter> implements Mai
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // TODO: 22/02/2021 app:layout_scroll_flags="scroll" at toolbar
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         adapter = new FeedAdapter();
@@ -114,6 +113,7 @@ public class HomeFragment extends AbstractFragment<HomePresenter> implements Mai
         public void setFeed(List<Feed> feed) {
             this.feed = feed;
         }
+        
     }
 
     private static class FeedViewHolder extends RecyclerView.ViewHolder {
@@ -129,6 +129,7 @@ public class HomeFragment extends AbstractFragment<HomePresenter> implements Mai
             // TODO: 07/04/2021
             this.imagePost.setImageURI(feed.getUri());
         }
+
     }
 
 }

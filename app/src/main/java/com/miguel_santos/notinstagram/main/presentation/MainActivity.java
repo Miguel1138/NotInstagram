@@ -18,7 +18,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.miguel_santos.notinstagram.R;
 import com.miguel_santos.notinstagram.common.view.AbstractActivity;
-import com.miguel_santos.notinstagram.main.camera.presentation.CameraFragment;
+import com.miguel_santos.notinstagram.main.camera.presentation.AddActivity;
 import com.miguel_santos.notinstagram.main.home.datasource.HomeDataSource;
 import com.miguel_santos.notinstagram.main.home.datasource.HomeLocalDataSource;
 import com.miguel_santos.notinstagram.main.home.presentation.HomeFragment;
@@ -40,7 +40,6 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
 
     Fragment homeFragment;
     Fragment profileFragment;
-    Fragment cameraFragment;
     Fragment searchFragment;
     // TODO 02/04/2021 Implementar o fragment de favoritos
     Fragment active;
@@ -123,8 +122,7 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
                 active = searchFragment;
                 return true;
             case R.id.menu_bottom_add:
-                manager.beginTransaction().hide(active).show(cameraFragment).commit();
-                active = cameraFragment;
+                AddActivity.launch(this);
                 return true;
             case R.id.menu_bottom_profile:
                 manager.beginTransaction().hide(active).show(profileFragment).commit();
@@ -155,14 +153,12 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
 
         homeFragment = HomeFragment.newInstance(this, homePresenter);
         profileFragment = ProfileFragment.newInstance(this, profilePresenter);
-        cameraFragment = CameraFragment.newInstance(this);
         searchFragment = SearchFragment.newInstance(this);
 
         active = homeFragment;
 
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().add(R.id.main_fragment, profileFragment).hide(profileFragment).commit();
-        manager.beginTransaction().add(R.id.main_fragment, cameraFragment).hide(cameraFragment).commit();
         manager.beginTransaction().add(R.id.main_fragment, searchFragment).hide(searchFragment).commit();
         manager.beginTransaction().add(R.id.main_fragment, homeFragment).hide(homeFragment).commit();
     }
