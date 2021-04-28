@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Build;
@@ -14,12 +17,15 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import androidx.core.content.FileProvider;
+import androidx.exifinterface.media.ExifInterface;
 import androidx.fragment.app.Fragment;
 
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
@@ -53,7 +59,7 @@ public class MediaHelper {
     public static MediaHelper getInstance(Activity activity) {
         if (INSTANCE == null) {
             MediaHelper mediaHelper = new MediaHelper();
-            //Corrigido o problema de Memory Leaking de ambas instâncias
+            // Corrigido o problema de Memory Leaking de ambas instâncias
             INSTANCE = new WeakReference<>(mediaHelper);
             INSTANCE.get().setActivity(activity);
         }
@@ -91,9 +97,9 @@ public class MediaHelper {
     }
 
     public void chooseCamera() {
-        Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         PackageManager packageManager = getContext().getPackageManager();
-        if (i.resolveActivity(packageManager) != null) {
+        if (intent.resolveActivity(packageManager) != null) {
             File photoFile = null;
             try {
                 photoFile = createImageFile();
@@ -108,8 +114,8 @@ public class MediaHelper {
                 edit.putString("url", mCropImageUri.toString());
                 edit.apply();
 
-                i.putExtra(MediaStore.EXTRA_OUTPUT, mCropImageUri);
-                activity.startActivityForResult(i, CAMERA_CODE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, mCropImageUri);
+                activity.startActivityForResult(intent, CAMERA_CODE);
             }
         }
     }
@@ -123,13 +129,10 @@ public class MediaHelper {
     public MediaHelper cropView(CropImageView cropImageView) {
         cropImageView.setAspectRatio(1, 1);
         cropImageView.setFixedAspectRatio(true);
-        cropImageView.setOnCropImageCompleteListener(new CropImageView.OnCropImageCompleteListener() {
-            @Override
-            public void onCropImageComplete(CropImageView view, CropImageView.CropResult result) {
-                Uri uri = result.getUri();
-                if (uri != null && listener != null) {
-                    listener.onImageCropped(uri);
-                }
+        cropImageView.setOnCropImageCompleteListener((view, result) -> {
+            Uri uri = result.getUri();
+            if (uri != null && listener != null) {
+                listener.onImageCropped(uri);
             }
         });
         return this;
@@ -197,17 +200,68 @@ public class MediaHelper {
             }
             camera = camera.open();
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         return camera;
     }
 
     public void saveCameraFile(byte[] data) {
         File pictureFile = createCameraFile(true);
+        if (pictureFile == null) {
+            Log.d("TESTE", "ERROR creating media file,check storage permission");
+            return;
+        }
+
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(pictureFile);
+            Bitmap realImage = BitmapFactory.decodeByteArray(data, 0, data.length);
+
+            ExifInterface exifInterface = new ExifInterface(pictureFile.toString());
+
+            if (exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("6")) {
+                realImage = rotate(realImage, 90);
+            } else if (exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("8")) {
+                realImage = rotate(realImage, 270);
+            } else if (exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("3")) {
+                realImage = rotate(realImage, 180);
+            } else if (exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("0")) {
+                realImage = rotate(realImage, 90);
+            }
+
+            realImage.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+            fileOutputStream.close();
+
+            Matrix matrix = new Matrix();
+            File outputMediaFile = createCameraFile(false);
+            if (outputMediaFile == null) {
+                Log.d("TESTE", "ERROR creating media file, check storage permissions");
+                return;
+            }
+
+            Bitmap result = Bitmap.createBitmap(realImage, 0, 0, realImage.getWidth(), realImage.getWidth(), matrix, true);
+
+            fileOutputStream = new FileOutputStream(outputMediaFile);
+            result.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+            fileOutputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static Bitmap rotate(Bitmap bitmap, int degrees) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        Matrix matrix = new Matrix();
+        matrix.setRotate(degrees);
+
+        return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
     }
 
     private File createCameraFile(boolean temp) {
-        if(getContext() == null) return null;
+        if (getContext() == null) return null;
 
         File mediaStorageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         if (mediaStorageDir != null && !mediaStorageDir.exists()) {
@@ -217,7 +271,7 @@ public class MediaHelper {
             }
         }
         String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        return new File(mediaStorageDir.getPath() + File.separator + (temp ? "TEMP_" : "IMG_") + timestamp + ".jpg");
+        return new File(mediaStorageDir.getPath() + File.separator + (temp ? "TEMP_" : "IMG_") + timestamp + ".JPEG");
     }
 
 }

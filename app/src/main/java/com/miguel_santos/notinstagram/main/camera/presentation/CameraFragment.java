@@ -59,7 +59,9 @@ public class CameraFragment extends AbstractFragment {
     public void onCameraButtonClick() {
         progressBar.setVisibility(View.VISIBLE);
         cameraButton.setVisibility(View.GONE);
-        camera.takePicture(null, null, (data, camera) -> {
+
+        camera.startPreview();
+        camera.takePicture(null, null, null, (data, camera) -> {
             mediaHelper.saveCameraFile(data);
             progressBar.setVisibility(View.GONE);
             cameraButton.setVisibility(View.VISIBLE);

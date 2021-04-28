@@ -79,6 +79,8 @@ public class ProfileFragment extends AbstractFragment<ProfilePresenter> implemen
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
+
+        // TODO: 21/04/2021 Verificar erro NUllException ao iniciar pela primeira vez.
         presenter.findUser();
     }
 

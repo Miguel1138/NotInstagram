@@ -15,7 +15,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private final Camera camera;
     private final SurfaceHolder holder;
 
-
     public CameraPreview(Context context, Camera camera) {
         super(context);
         this.camera = camera;
@@ -36,7 +35,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
-        if(holder.getSurface() == null ) return;
+        if (holder.getSurface() == null) return;
 
         try {
             camera.stopPreview();
@@ -47,8 +46,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             int w = width;
             int h = height;
 
-            List<Camera.Size> supportedPriviewSizes = parameters.getSupportedPreviewSizes();
-            for (Camera.Size size : supportedPriviewSizes) {
+            List<Camera.Size> supportedPreviewSizes = parameters.getSupportedPreviewSizes();
+            for (Camera.Size size : supportedPreviewSizes) {
                 w = size.width;
                 h = size.height;
             }
