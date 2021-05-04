@@ -91,6 +91,12 @@ public class ProfileFragment extends AbstractFragment<ProfilePresenter> implemen
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        presenter.findUser();
+    }
+
+    @Override
     public void showPhoto(Uri photo) {
         try {
             if (getContext() != null && getContext().getContentResolver() != null) {

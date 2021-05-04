@@ -26,7 +26,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NotInstagram"
         tools:ignore="GoogleAppIndexingWarning">
-
+        <activity android:name=".main.camera.presentation.AddCaptionActivity"
+            android:label="@string/photo"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.NotInstagram.NoActionBar"/>
         <activity
             android:name=".main.camera.presentation.AddActivity"
             android:label="@string/photo"

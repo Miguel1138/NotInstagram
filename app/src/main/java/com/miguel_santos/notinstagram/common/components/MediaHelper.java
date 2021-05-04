@@ -59,7 +59,10 @@ public class MediaHelper {
     public static MediaHelper getInstance(Activity activity) {
         if (INSTANCE == null) {
             MediaHelper mediaHelper = new MediaHelper();
-            // Corrigido o problema de Memory Leaking de ambas instâncias
+            INSTANCE = new WeakReference<>(mediaHelper);
+            INSTANCE.get().setActivity(activity);
+        } else if (INSTANCE.get() == null) {
+            MediaHelper mediaHelper = new MediaHelper();
             INSTANCE = new WeakReference<>(mediaHelper);
             INSTANCE.get().setActivity(activity);
         }
@@ -73,6 +76,10 @@ public class MediaHelper {
     // Padrão singleton para fragments
     public static MediaHelper getInstance(Fragment fragment) {
         if (INSTANCE == null) {
+            MediaHelper mediaHelper = new MediaHelper();
+            INSTANCE = new WeakReference<>(mediaHelper);
+            INSTANCE.get().setFragment(fragment);
+        } else if (INSTANCE.get() == null) {
             MediaHelper mediaHelper = new MediaHelper();
             INSTANCE = new WeakReference<>(mediaHelper);
             INSTANCE.get().setFragment(fragment);
@@ -205,11 +212,13 @@ public class MediaHelper {
         return camera;
     }
 
-    public void saveCameraFile(byte[] data) {
+    public Uri saveCameraFile(byte[] data) {
         File pictureFile = createCameraFile(true);
+        File outputMediaFile = null;
+
         if (pictureFile == null) {
             Log.d("TESTE", "ERROR creating media file,check storage permission");
-            return;
+            return null;
         }
 
         try {
@@ -232,10 +241,10 @@ public class MediaHelper {
             fileOutputStream.close();
 
             Matrix matrix = new Matrix();
-            File outputMediaFile = createCameraFile(false);
+            outputMediaFile = createCameraFile(false);
             if (outputMediaFile == null) {
                 Log.d("TESTE", "ERROR creating media file, check storage permissions");
-                return;
+                return null;
             }
 
             Bitmap result = Bitmap.createBitmap(realImage, 0, 0, realImage.getWidth(), realImage.getWidth(), matrix, true);
@@ -248,6 +257,7 @@ public class MediaHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return Uri.fromFile(outputMediaFile);
     }
 
     private static Bitmap rotate(Bitmap bitmap, int degrees) {

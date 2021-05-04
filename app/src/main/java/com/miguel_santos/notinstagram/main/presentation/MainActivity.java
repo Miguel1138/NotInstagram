@@ -115,7 +115,6 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
             case R.id.menu_bottom_home:
                 manager.beginTransaction().hide(active).show(homeFragment).commit();
                 active = homeFragment;
-                homePresenter.findFeed();
                 return true;
             case R.id.menu_bottom_search:
                 manager.beginTransaction().hide(active).show(searchFragment).commit();
@@ -127,7 +126,6 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
             case R.id.menu_bottom_profile:
                 manager.beginTransaction().hide(active).show(profileFragment).commit();
                 active = profileFragment;
-                profilePresenter.findUser();
                 return true;
         }
         return false;

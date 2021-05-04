@@ -1,6 +1,7 @@
 package com.miguel_santos.notinstagram.main.camera.presentation;
 
 import android.hardware.Camera;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,8 +35,19 @@ public class CameraFragment extends AbstractFragment {
 
     private MediaHelper mediaHelper;
     private Camera camera;
+    private AddView addView;
 
     public CameraFragment() {
+    }
+
+    public static CameraFragment newInstance(AddView addView) {
+        CameraFragment cameraFragment = new CameraFragment();
+        cameraFragment.setAddView(addView);
+        return cameraFragment;
+    }
+
+    private void setAddView(AddView addView) {
+        this.addView = addView;
     }
 
     @Nullable
@@ -62,9 +74,11 @@ public class CameraFragment extends AbstractFragment {
 
         camera.startPreview();
         camera.takePicture(null, null, null, (data, camera) -> {
-            mediaHelper.saveCameraFile(data);
             progressBar.setVisibility(View.GONE);
             cameraButton.setVisibility(View.VISIBLE);
+            Uri uri = mediaHelper.saveCameraFile(data);
+            if (uri != null)
+                addView.onImageLoaded(uri);
         });
     }
 
