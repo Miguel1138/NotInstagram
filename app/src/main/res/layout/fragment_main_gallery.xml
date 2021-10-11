@@ -2,16 +2,16 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_gallery_scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/camera_image_grid"
+            android:id="@+id/main_gallery_camera_image_grid"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/red"
@@ -23,12 +23,13 @@
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/main_gallery_recycler"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/camera_image_grid"
+            app:layout_constraintTop_toBottomOf="@id/main_gallery_camera_image_grid"
             tools:listitem="@layout/item_profile_grid" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

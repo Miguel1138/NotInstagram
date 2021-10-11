@@ -26,14 +26,13 @@ public class RegisterNamePasswordFragment extends AbstractFragment<RegisterPrese
     EditText edtConfirmPassword;
     @BindView(R.id.register_input_edt_password_confirm)
     TextInputLayout inputLayoutConfirmPasswrod;
+    @BindView(R.id.register_name_btn_next)
+    LoadingButton btnNext;
 
     @Override
     public void onFailureCreateUser(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
-
-    @BindView(R.id.register_name_btn_next)
-    LoadingButton btnNext;
 
     public RegisterNamePasswordFragment() {
 

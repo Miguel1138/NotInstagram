@@ -31,24 +31,12 @@ public class Database {
         feed = new HashMap<>();
         followers = new HashMap<>();
 
-        //init();
-
-        //usersAuth.add(new UserAuth("user1@gmail.com", "1234"));
-        //usersAuth.add(new UserAuth("user2@gmail.com", "12345"));
-        //usersAuth.add(new UserAuth("user3@gmail.com", "123456"));
-        //usersAuth.add(new UserAuth("user4@gmail.com", "1234567"));
-        //usersAuth.add(new UserAuth("user5@gmail.com", "12345678"));
-        //usersAuth.add(new UserAuth("user6@gmail.com", "123456789"));
+        init();
     }
 
     // Padrão Singleton
     public static Database getInstance() {
         return new Database();
-        /*if (INSTANCE == null) {
-            INSTANCE = new Database();
-            INSTANCE.init();
-        }
-        return INSTANCE;*/
     }
 
     public static void init() {
@@ -112,6 +100,7 @@ public class Database {
             } else {
                 HashMap<String, HashSet<Feed>> feedMap = Database.feed;
 
+                // Passando o post para o feed de cada seguidor do usuário.
                 for (String follower : followers) {
                     HashSet<Feed> feeds = feedMap.get(follower);
 
@@ -134,15 +123,15 @@ public class Database {
 
                     myFeed.add(feed);
                 }
-
-                if (onSuccessListener != null)
-                    onSuccessListener.onSuccess(null);
-
-                if(onCompleteListener != null)
-                    onCompleteListener.onComplete();
             }
+
+            if (onSuccessListener != null)
+                onSuccessListener.onSuccess(null);
+
+            if (onCompleteListener != null)
+                onCompleteListener.onComplete();
         });
-        
+
         return this;
     }
 

@@ -1,5 +1,7 @@
 package com.miguel_santos.notinstagram.common.components;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -14,7 +16,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
@@ -31,8 +32,6 @@ import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import static android.app.Activity.RESULT_OK;
 
 public class MediaHelper {
 
@@ -209,6 +208,7 @@ public class MediaHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return camera;
     }
 
@@ -216,10 +216,7 @@ public class MediaHelper {
         File pictureFile = createCameraFile(true);
         File outputMediaFile = null;
 
-        if (pictureFile == null) {
-            Log.d("TESTE", "ERROR creating media file,check storage permission");
-            return null;
-        }
+        if (pictureFile == null) return null;
 
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(pictureFile);
@@ -242,12 +239,10 @@ public class MediaHelper {
 
             Matrix matrix = new Matrix();
             outputMediaFile = createCameraFile(false);
-            if (outputMediaFile == null) {
-                Log.d("TESTE", "ERROR creating media file, check storage permissions");
-                return null;
-            }
+            if (outputMediaFile == null) return null;
 
-            Bitmap result = Bitmap.createBitmap(realImage, 0, 0, realImage.getWidth(), realImage.getWidth(), matrix, true);
+            Bitmap result = Bitmap.createBitmap(realImage, 0, 0,
+                    realImage.getWidth(), realImage.getWidth(), matrix, true);
 
             fileOutputStream = new FileOutputStream(outputMediaFile);
             result.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
@@ -275,10 +270,7 @@ public class MediaHelper {
 
         File mediaStorageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         if (mediaStorageDir != null && !mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                Log.d("TESTE", "failed to create Directory");
-                return null;
-            }
+            if (!mediaStorageDir.mkdirs()) return null;
         }
         String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         return new File(mediaStorageDir.getPath() + File.separator + (temp ? "TEMP_" : "IMG_") + timestamp + ".JPEG");

@@ -15,7 +15,7 @@ public class AddPresenter implements Presenter<Void> {
         this.dataSource = dataSource;
     }
 
-    void createPost(Uri uri,String caption) {
+    void createPost(Uri uri, String caption) {
         view.showProgressBar();
         dataSource.savePost(uri, caption, this);
     }
