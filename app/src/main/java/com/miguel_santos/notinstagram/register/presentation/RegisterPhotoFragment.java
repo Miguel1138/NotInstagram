@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -53,8 +52,8 @@ public class RegisterPhotoFragment extends AbstractFragment<RegisterPresenter> i
                 imageViewCropped.setImageBitmap(bitmap);
             }
         } catch (IOException e) {
-            Log.e("ErrorTest", e.getMessage(), e);
             // TODO: 19/03/2021 Implementar ação em caso de erro.
+            e.printStackTrace();
         }
     }
 

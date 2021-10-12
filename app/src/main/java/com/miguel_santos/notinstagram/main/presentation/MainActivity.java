@@ -29,6 +29,8 @@ import com.miguel_santos.notinstagram.main.profile.presentation.ProfileFragment;
 import com.miguel_santos.notinstagram.main.profile.presentation.ProfilePresenter;
 import com.miguel_santos.notinstagram.main.search.presentation.SearchFragment;
 
+import butterknife.BindView;
+
 public class MainActivity extends AbstractActivity implements BottomNavigationView.OnNavigationItemSelectedListener, MainView {
 
     public static final String ACT_SOURCE = "act_source";
@@ -44,6 +46,9 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
     // TODO 02/04/2021 Implementar o fragment de favoritos
     Fragment active;
 
+    @BindView(R.id.main_toolbar)
+    Toolbar toolbar;
+
     public static void launch(Context context, int source) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(ACT_SOURCE, source);
@@ -54,9 +59,6 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             Drawable drawable = getResources().getDrawable(R.drawable.ic_insta_camera);
@@ -84,8 +86,14 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        // Solve homeFragment toolbar with scrolling behavior after cameraFragment is finished.
+        scrollToolbarEnabled(active != homeFragment);
+    }
+
+    @Override
     public void scrollToolbarEnabled(boolean enabled) {
-        Toolbar toolbar = findViewById(R.id.main_toolbar);
         AppBarLayout appBarLayout = findViewById(R.id.main_appbar);
 
         AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
@@ -105,11 +113,7 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         FragmentManager manager = getSupportFragmentManager();
-        if (item.getItemId() != R.id.menu_bottom_home) {
-            scrollToolbarEnabled(true);
-        } else {
-            scrollToolbarEnabled(false);
-        }
+        scrollToolbarEnabled(item.getItemId() != R.id.menu_bottom_home);
 
         switch (item.getItemId()) {
             case R.id.menu_bottom_home:

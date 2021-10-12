@@ -13,7 +13,6 @@ public interface MainView extends View {
     void scrollToolbarEnabled(boolean enabled);
 
     interface ProfileView extends View {
-
         void showPhoto(Uri photo);
 
         void showData(String name, String follower, String following, String posts);
@@ -22,7 +21,6 @@ public interface MainView extends View {
     }
 
     interface HomeView extends View {
-
         void showFeed(List<Feed> response);
     }
 

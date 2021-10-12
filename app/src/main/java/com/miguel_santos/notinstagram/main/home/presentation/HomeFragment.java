@@ -6,7 +6,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +17,6 @@ import com.miguel_santos.notinstagram.common.model.Feed;
 import com.miguel_santos.notinstagram.common.view.AbstractFragment;
 import com.miguel_santos.notinstagram.main.presentation.MainView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -94,48 +92,6 @@ public class HomeFragment extends AbstractFragment<HomePresenter> implements Mai
     @Override
     protected int getLayout() {
         return R.layout.fragment_main_home;
-    }
-
-    private class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
-
-        private List<Feed> feed = new ArrayList<>();
-
-        @NonNull
-        @Override
-        public FeedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new FeedViewHolder(getLayoutInflater().inflate(R.layout.item_post_list, parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull FeedViewHolder holder, int position) {
-            holder.bind(feed.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return feed.size();
-        }
-
-        public void setFeed(List<Feed> feed) {
-            this.feed = feed;
-        }
-        
-    }
-
-    private static class FeedViewHolder extends RecyclerView.ViewHolder {
-
-        private final ImageView imagePost;
-
-        public FeedViewHolder(@NonNull View itemView) {
-            super(itemView);
-            imagePost = itemView.findViewById(R.id.profile_image_grid);
-        }
-
-        public void bind(Feed feed) {
-            // TODO: 07/04/2021
-            this.imagePost.setImageURI(feed.getUri());
-        }
-
     }
 
 }

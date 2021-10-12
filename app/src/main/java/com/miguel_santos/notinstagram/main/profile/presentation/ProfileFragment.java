@@ -4,30 +4,31 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.miguel_santos.notinstagram.R;
+import com.miguel_santos.notinstagram.common.components.CustomDialog;
 import com.miguel_santos.notinstagram.common.model.Post;
 import com.miguel_santos.notinstagram.common.view.AbstractFragment;
 import com.miguel_santos.notinstagram.main.presentation.MainView;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends AbstractFragment<ProfilePresenter> implements MainView.ProfileView {
@@ -47,6 +48,8 @@ public class ProfileFragment extends AbstractFragment<ProfilePresenter> implemen
     TextView tevFollowingCount;
     @BindView(R.id.profile_tev_post_count)
     TextView tevPostsCount;
+    @BindView(R.id.profile_navigation_tabs)
+    BottomNavigationView bottomNavigationView;
 
     public ProfileFragment() {
     }
@@ -79,9 +82,18 @@ public class ProfileFragment extends AbstractFragment<ProfilePresenter> implemen
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
+        bottomNavigationView.setOnNavigationItemSelectedListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.menu_profile_grid:
+                    recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                    return true;
+                case R.id.menu_profile_list:
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+                    return true;
+            }
 
-        // TODO: 21/04/2021 Verificar erro NUllException ao iniciar pela primeira vez.
-        presenter.findUser();
+            return false;
+        });
     }
 
     @Override
@@ -105,7 +117,7 @@ public class ProfileFragment extends AbstractFragment<ProfilePresenter> implemen
                 imageViewProfile.setImageBitmap(bitmap);
             }
         } catch (IOException e) {
-            Log.e("Teste", e.getMessage(), e);
+            e.printStackTrace();
         }
     }
 
@@ -137,46 +149,4 @@ public class ProfileFragment extends AbstractFragment<ProfilePresenter> implemen
     protected int getLayout() {
         return R.layout.fragment_main_profile;
     }
-
-    private class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
-
-        private List<Post> posts = new ArrayList<>();
-
-        public void setPosts(List<Post> posts) {
-            this.posts = posts;
-        }
-
-        @NonNull
-        @Override
-        public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new PostViewHolder(getLayoutInflater().inflate(R.layout.item_profile_grid, parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
-            holder.bind(posts.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return posts.size();
-        }
-
-    }
-
-    private static class PostViewHolder extends RecyclerView.ViewHolder {
-
-        private final ImageView imagePost;
-
-        public PostViewHolder(@NonNull View itemView) {
-            super(itemView);
-            imagePost = itemView.findViewById(R.id.profile_image_grid);
-        }
-
-        public void bind(Post post) {
-            this.imagePost.setImageURI(post.getUri());
-        }
-
-    }
-
 }
