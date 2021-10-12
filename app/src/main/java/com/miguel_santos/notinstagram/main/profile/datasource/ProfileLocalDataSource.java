@@ -1,5 +1,7 @@
 package com.miguel_santos.notinstagram.main.profile.datasource;
 
+import android.net.Uri;
+
 import com.miguel_santos.notinstagram.common.model.Database;
 import com.miguel_santos.notinstagram.common.model.Post;
 import com.miguel_santos.notinstagram.common.model.User;
@@ -23,4 +25,10 @@ public class ProfileLocalDataSource implements ProfileDataSource {
                         }));
     }
 
+    @Override
+    public void changeProfilePhoto(Uri photo, Presenter presenter) {
+        Database db = Database.getInstance();
+        db.addPhoto(db.getUser().getUUID(), photo)
+                .addOnSuccessListener((Database.OnSuccessListener<Boolean>) presenter::onSuccess);
+    }
 }

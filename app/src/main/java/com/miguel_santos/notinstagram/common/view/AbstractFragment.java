@@ -42,7 +42,7 @@ public abstract class AbstractFragment<P> extends Fragment implements com.miguel
     }
 
     @Override
-    public void setStatusBarDark() {
+    public void setStatusBarDark(boolean enable) {
     }
 
     public Drawable findDrawable(@DrawableRes int drawableId) {

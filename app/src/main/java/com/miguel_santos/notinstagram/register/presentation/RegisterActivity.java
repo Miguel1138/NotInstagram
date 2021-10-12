@@ -47,7 +47,7 @@ public class RegisterActivity extends AbstractActivity implements RegisterView, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStatusBarDark();
+        setStatusBarDark(true);
 
         mediaHelper = MediaHelper.getInstance(this)
                 .cropView(cropImageView)
@@ -129,12 +129,12 @@ public class RegisterActivity extends AbstractActivity implements RegisterView, 
 
     @Override
     public void showCamera() {
-        mediaHelper.chooseCamera();
+        mediaHelper.chooseCamera(this);
     }
 
     @Override
     public void showGallery() {
-        mediaHelper.chooseGallery();
+        mediaHelper.chooseGallery(this);
     }
 
     @OnClick(R.id.register_btn_crop)

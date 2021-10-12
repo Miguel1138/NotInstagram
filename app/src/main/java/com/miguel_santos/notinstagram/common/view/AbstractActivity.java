@@ -1,7 +1,6 @@
 package com.miguel_santos.notinstagram.common.view;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.miguel_santos.notinstagram.R;
 import com.miguel_santos.notinstagram.common.util.Colors;
@@ -56,11 +54,16 @@ public abstract class AbstractActivity extends AppCompatActivity implements View
     }
 
     @Override
-    public void setStatusBarDark() {
+    public void setStatusBarDark(boolean enable) {
+        Window window = getWindow();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(findColor(R.color.black));
+            if (enable) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.setStatusBarColor(findColor(R.color.black));
+            } else {
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.setStatusBarColor(findColor(R.color.white));
+            }
         }
     }
 

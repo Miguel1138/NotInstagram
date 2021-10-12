@@ -97,12 +97,14 @@ public class MediaHelper {
         return activity;
     }
 
-    public void chooseGallery() {
+    public void chooseGallery(Activity activity) {
+        getInstance(activity);
+
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         activity.startActivityForResult(intent, GALLERY_CODE);
     }
 
-    public void chooseCamera() {
+    public void chooseCamera(Activity activity) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         PackageManager packageManager = getContext().getPackageManager();
         if (intent.resolveActivity(packageManager) != null) {
@@ -121,6 +123,8 @@ public class MediaHelper {
                 edit.apply();
 
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mCropImageUri);
+
+                getInstance(activity);
                 activity.startActivityForResult(intent, CAMERA_CODE);
             }
         }

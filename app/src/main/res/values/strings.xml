@@ -47,5 +47,6 @@
     <string name="cancel">Cancel</string>
     <string name="fav">Favoritos</string>
     <string name="profile">Perfil</string>
+    <string name="define_new_profile_photo">Escolha sua nova foto de perfil</string>
 
 </resources>

@@ -1,5 +1,7 @@
 package com.miguel_santos.notinstagram.main.profile.presentation;
 
+import android.net.Uri;
+
 import com.miguel_santos.notinstagram.common.model.Post;
 import com.miguel_santos.notinstagram.common.model.User;
 import com.miguel_santos.notinstagram.common.model.UserProfile;
@@ -14,12 +16,19 @@ public class ProfilePresenter implements Presenter<UserProfile> {
     private final ProfileDataSource dataSource;
     private MainView.ProfileView view;
 
+    private MainView mainView;
+    private Uri uri;
+
     public ProfilePresenter(ProfileDataSource dataSource) {
         this.dataSource = dataSource;
     }
 
     public void setView(MainView.ProfileView view) {
         this.view = view;
+    }
+
+    public void setMainView(MainView mainView) {
+        this.mainView = mainView;
     }
 
     public void findUser() {
@@ -54,4 +63,42 @@ public class ProfilePresenter implements Presenter<UserProfile> {
     public void onComplete() {
         view.hideProgressBar();
     }
+
+    public void setUri(Uri uri) {
+        this.uri = uri;
+        if (view != null) {
+            view.showPhoto(uri);
+            view.showProgressBar();
+
+            // TODO: 12/10/2021 testando sem callback.
+            dataSource.changeProfilePhoto(uri, new UpdatePhotoCallback());
+        }
+    }
+
+    public void showCamera() {
+        mainView.showCamera();
+    }
+
+    public void showGallery() {
+        mainView.showGallery();
+    }
+
+    private class UpdatePhotoCallback implements Presenter<Boolean> {
+        @Override
+        public void onSuccess(Boolean response) {
+            // if succeed starts the same activity with the new picture.
+            mainView.onPhotoChanged();
+        }
+
+        @Override
+        public void onError(String message) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    }
+
 }

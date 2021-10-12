@@ -58,6 +58,8 @@ public class ProfileFragment extends AbstractFragment<ProfilePresenter> implemen
         ProfileFragment profileFragment = new ProfileFragment();
         profileFragment.setPresenter(profilePresenter);
         profileFragment.setMainView(mainView);
+
+        profilePresenter.setMainView(mainView);
         profilePresenter.setView(profileFragment);
         return profileFragment;
     }
@@ -133,6 +135,25 @@ public class ProfileFragment extends AbstractFragment<ProfilePresenter> implemen
     public void showPosts(List<Post> posts) {
         postAdapter.setPosts(posts);
         postAdapter.notifyDataSetChanged();
+    }
+
+    // TODO: 12/10/2021 Add listener to change user photo.
+    @OnClick(R.id.profile_image_icon)
+    public void onUserIconClick() {
+        CustomDialog customDialog = new CustomDialog.Builder(getContext())
+                .setTitle(R.string.define_new_profile_photo)
+                .addButton((v) -> {
+                    switch (v.getId()) {
+                        case R.string.take_picture:
+                            presenter.showCamera();
+                            break;
+                        case R.string.search_gallery:
+                            presenter.showGallery();
+                            break;
+                    }
+                }, R.string.take_picture, R.string.search_gallery)
+                .build();
+        customDialog.show();
     }
 
     @Override

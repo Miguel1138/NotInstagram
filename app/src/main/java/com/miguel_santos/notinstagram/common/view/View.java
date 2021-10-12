@@ -10,5 +10,5 @@ public interface View {
 
     Context getContext();
 
-    void setStatusBarDark();
+    void setStatusBarDark(boolean enable);
 }

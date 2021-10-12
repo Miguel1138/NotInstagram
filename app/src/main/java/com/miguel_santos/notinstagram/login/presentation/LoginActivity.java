@@ -36,7 +36,7 @@ public class LoginActivity extends AbstractActivity implements LoginView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStatusBarDark();
+        setStatusBarDark(true);
 
         UserAuth user = Database.getInstance().getUser();
         if (user != null)

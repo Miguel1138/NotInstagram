@@ -1,70 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".main.presentation.MainActivity">
+    android:layout_height="match_parent">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <com.theartofdev.edmodo.cropper.CropImageView
+        android:id="@+id/home_capture_new_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/main_bottom_nav">
+        android:visibility="gone"
+        app:cropScaleType="centerCrop"
+        tools:visibility="visible" />
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/main_appbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <Button
+        android:id="@+id/home_btn_crop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:backgroundTint="?attr/colorOnPrimary"
+        android:padding="16dp"
+        android:text="@string/save"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/main_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll"
-                app:title=" ">
+    <RelativeLayout
+        android:id="@+id/home_container_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".main.presentation.MainActivity">
 
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:layout_marginTop="8dp"
-                    android:padding="8dp"
-                    android:src="@drawable/instagram_logo_black" />
-            </androidx.appcompat.widget.Toolbar>
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <FrameLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:context=".main.presentation.MainActivity">
+            android:layout_above="@id/main_bottom_nav">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/main_appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/main_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary"
+                    app:layout_scrollFlags="scroll"
+                    app:title=" ">
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginTop="8dp"
+                        android:padding="8dp"
+                        android:src="@drawable/instagram_logo_black" />
+                </androidx.appcompat.widget.Toolbar>
+            </com.google.android.material.appbar.AppBarLayout>
 
             <FrameLayout
-                android:id="@+id/main_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@id/main_bottom_nav"
-                tools:layout="@layout/fragment_main_camera" />
+                android:background="@color/white"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:context=".main.presentation.MainActivity">
 
-            <ProgressBar
-                android:id="@+id/main_progress_bar"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </FrameLayout>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                <FrameLayout
+                    android:id="@+id/main_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/main_bottom_nav"
+                    tools:layout="@layout/fragment_main_camera" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/main_bottom_nav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="?attr/colorPrimary"
-        app:itemIconSize="28dp"
-        app:itemIconTint="?attr/colorAccent"
-        app:labelVisibilityMode="unlabeled"
-        app:menu="@menu/menu_bottom_navigation" />
+                <ProgressBar
+                    android:id="@+id/main_progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+            </FrameLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-</RelativeLayout>
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/main_bottom_nav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="?attr/colorPrimary"
+            app:itemIconSize="28dp"
+            app:itemIconTint="?attr/colorAccent"
+            app:labelVisibilityMode="unlabeled"
+            app:menu="@menu/menu_bottom_navigation" />
+    </RelativeLayout>
+
+</FrameLayout>

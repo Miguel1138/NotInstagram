@@ -12,6 +12,12 @@ public interface MainView extends View {
 
     void scrollToolbarEnabled(boolean enabled);
 
+    void showCamera();
+
+    void showGallery();
+
+    void onPhotoChanged();
+
     interface ProfileView extends View {
         void showPhoto(Uri photo);
 
