@@ -1,50 +1,54 @@
 package com.miguel_santos.notinstagram.main.search.presentation;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.miguel_santos.notinstagram.R;
+import com.miguel_santos.notinstagram.common.model.User;
+import com.miguel_santos.notinstagram.common.view.AbstractFragment;
 import com.miguel_santos.notinstagram.main.presentation.MainView;
 
-public class SearchFragment extends Fragment {
+import java.util.List;
+
+import butterknife.BindView;
+
+public class SearchFragment extends AbstractFragment<SearchPresenter> implements MainView.SearchView {
 
     private MainView mainView;
+    private UserAdapter adapter;
+
+    @BindView(R.id.search_recycler)
+    RecyclerView recyclerView;
 
     public SearchFragment() {
     }
 
-    public static SearchFragment newInstance(MainView mainView) {
+    public static SearchFragment newInstance(MainView mainView, SearchPresenter presenter) {
         SearchFragment searchFragment = new SearchFragment();
+
         searchFragment.setMainView(mainView);
+        searchFragment.setPresenter(presenter);
+        presenter.setView(searchFragment);
+
         return searchFragment;
     }
 
     private void setMainView(MainView mainView) {
         this.mainView = mainView;
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // TODO: 22/02/2021 app:layout_scroll_flags="scroll" at toolbar
-        View view = inflater.inflate(R.layout.fragment_main_search, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.search_recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-
-        recyclerView.setAdapter(new PostAdapter());
-
-        return view;
     }
 
     @Override
@@ -53,56 +57,62 @@ public class SearchFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        adapter = new UserAdapter();
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(adapter);
+
+        return view;
+    }
+
+    @Override
+    public void showUsers(List<User> users) {
+        adapter.setUser(users, user -> mainView.showProfile(user.getUuid()));
+        adapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_profile, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
+        inflater.inflate(R.menu.menu_search, menu);
 
-    private class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchManager searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
 
-        private int[] fakeImages = new int[]{
-                R.drawable.ic_insta_add,
-                R.drawable.ic_insta_add,
-                R.drawable.ic_insta_add,
-                R.drawable.ic_insta_add,
-                R.drawable.ic_insta_add,
-                R.drawable.ic_insta_add,
-                R.drawable.ic_insta_add,
-                R.drawable.ic_insta_add,
-                R.drawable.ic_insta_add,
-                R.drawable.ic_insta_add
-        };
+        SearchView searchView = null;
+        if (searchItem != null) searchView = (SearchView) searchItem.getActionView();
 
-        @NonNull
-        @Override
-        public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new PostViewHolder(getLayoutInflater().inflate(R.layout.item_user_list, parent, false));
-        }
+        if (searchView != null) {
+            searchView.setSearchableInfo(
+                    searchManager.getSearchableInfo(((AppCompatActivity) getContext()).getComponentName())
+            );
 
-        @Override
-        public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
-            holder.bind(fakeImages[position]);
-        }
+            searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
+            });
 
-        @Override
-        public int getItemCount() {
-            return fakeImages.length;
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    if (!newText.isEmpty()) presenter.findUsers(newText);
+                    return false;
+                }
+            });
+
+            searchItem.expandActionView();
         }
     }
 
-    private static class PostViewHolder extends RecyclerView.ViewHolder {
-
-        private final ImageView imagePost;
-
-        public PostViewHolder(@NonNull View itemView) {
-            super(itemView);
-            imagePost = itemView.findViewById(R.id.main_search_image_user);
-        }
-
-        public void bind(int image) {
-            this.imagePost.setImageResource(image);
-        }
+    @Override
+    protected int getLayout() {
+        return R.layout.fragment_main_search;
     }
 
 }

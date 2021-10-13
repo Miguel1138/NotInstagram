@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.miguel_santos.notinstagram.R;
-import com.miguel_santos.notinstagram.common.components.CustomDialog;
+import com.miguel_santos.notinstagram.common.model.Database;
 import com.miguel_santos.notinstagram.common.model.Post;
 import com.miguel_santos.notinstagram.common.view.AbstractFragment;
 import com.miguel_santos.notinstagram.main.presentation.MainView;
@@ -28,7 +29,6 @@ import java.io.IOException;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends AbstractFragment<ProfilePresenter> implements MainView.ProfileView {
@@ -50,6 +50,8 @@ public class ProfileFragment extends AbstractFragment<ProfilePresenter> implemen
     TextView tevPostsCount;
     @BindView(R.id.profile_navigation_tabs)
     BottomNavigationView bottomNavigationView;
+    @BindView(R.id.profile_btn_edit_profile)
+    Button btnEditProfile;
 
     public ProfileFragment() {
     }
@@ -105,7 +107,7 @@ public class ProfileFragment extends AbstractFragment<ProfilePresenter> implemen
     @Override
     public void onResume() {
         super.onResume();
-        presenter.findUser();
+        presenter.findUser(Database.getInstance().getUser().getUUID());
     }
 
     @Override
@@ -122,11 +124,14 @@ public class ProfileFragment extends AbstractFragment<ProfilePresenter> implemen
     }
 
     @Override
-    public void showData(String name, String follower, String following, String posts) {
+    public void showData(String name, String follower, String following, String posts, boolean editProfile) {
         tevUsername.setText(name);
         tevFollowerCount.setText(follower);
         tevFollowingCount.setText(following);
         tevPostsCount.setText(posts);
+
+        // If it's your profile set the button text to edit_profile otherwise set the text to follow.
+        btnEditProfile.setText(editProfile ? R.string.edit_profile : R.string.follow);
     }
 
     @Override

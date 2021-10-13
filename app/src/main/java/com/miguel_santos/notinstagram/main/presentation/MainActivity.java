@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.miguel_santos.notinstagram.R;
+import com.miguel_santos.notinstagram.common.model.Database;
 import com.miguel_santos.notinstagram.common.view.AbstractActivity;
 import com.miguel_santos.notinstagram.main.camera.presentation.AddActivity;
 import com.miguel_santos.notinstagram.main.home.datasource.HomeDataSource;
@@ -27,7 +28,9 @@ import com.miguel_santos.notinstagram.main.profile.datasource.ProfileDataSource;
 import com.miguel_santos.notinstagram.main.profile.datasource.ProfileLocalDataSource;
 import com.miguel_santos.notinstagram.main.profile.presentation.ProfileFragment;
 import com.miguel_santos.notinstagram.main.profile.presentation.ProfilePresenter;
+import com.miguel_santos.notinstagram.main.search.datasource.SearchLocalDataSource;
 import com.miguel_santos.notinstagram.main.search.presentation.SearchFragment;
+import com.miguel_santos.notinstagram.main.search.presentation.SearchPresenter;
 
 import butterknife.BindView;
 
@@ -39,6 +42,7 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
 
     private ProfilePresenter profilePresenter;
     private HomePresenter homePresenter;
+    private SearchPresenter searchPresenter;
 
     Fragment homeFragment;
     Fragment profileFragment;
@@ -81,6 +85,7 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
                 getSupportFragmentManager().beginTransaction().hide(active).show(profileFragment).commit();
                 active = profileFragment;
                 scrollToolbarEnabled(true);
+                profilePresenter.findUser(Database.getInstance().getUser().getUUID());
             }
         }
     }
@@ -111,6 +116,14 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
     }
 
     @Override
+    public void showProfile(String user) {
+        getSupportFragmentManager().beginTransaction().hide(active).show(profileFragment).commit();
+        active = profileFragment;
+        scrollToolbarEnabled(true);
+        profilePresenter.findUser(user);
+    }
+
+    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         FragmentManager manager = getSupportFragmentManager();
         scrollToolbarEnabled(item.getItemId() != R.id.menu_bottom_home);
@@ -123,6 +136,7 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
             case R.id.menu_bottom_search:
                 manager.beginTransaction().hide(active).show(searchFragment).commit();
                 active = searchFragment;
+                scrollToolbarEnabled(false);
                 return true;
             case R.id.menu_bottom_add:
                 AddActivity.launch(this);
@@ -149,13 +163,15 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
     protected void onInject() {
         ProfileDataSource profileDataSource = new ProfileLocalDataSource();
         HomeDataSource homeDataSource = new HomeLocalDataSource();
+        SearchLocalDataSource searchDataSouce = new SearchLocalDataSource();
 
         profilePresenter = new ProfilePresenter(profileDataSource);
         homePresenter = new HomePresenter(homeDataSource);
+        searchPresenter = new SearchPresenter(searchDataSouce);
 
         homeFragment = HomeFragment.newInstance(this, homePresenter);
         profileFragment = ProfileFragment.newInstance(this, profilePresenter);
-        searchFragment = SearchFragment.newInstance(this);
+        searchFragment = SearchFragment.newInstance(this, searchPresenter);
 
         active = homeFragment;
 

@@ -26,10 +26,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NotInstagram"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".main.camera.presentation.AddCaptionActivity"
+        <activity
+            android:name=".main.camera.presentation.AddCaptionActivity"
             android:label="@string/photo"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.NotInstagram.NoActionBar"/>
+            android:theme="@style/Theme.NotInstagram.NoActionBar" />
         <activity
             android:name=".main.camera.presentation.AddActivity"
             android:label="@string/photo"
@@ -37,7 +38,20 @@
             android:theme="@style/Theme.NotInstagram.NoActionBar" />
         <activity
             android:name=".main.presentation.MainActivity"
-            android:theme="@style/Theme.NotInstagram.NoActionBar" />
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.NotInstagram.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
+        </activity>
         <activity
             android:name=".register.presentation.RegisterActivity"
             android:theme="@style/Theme.NotInstagram.NoActionBar" />

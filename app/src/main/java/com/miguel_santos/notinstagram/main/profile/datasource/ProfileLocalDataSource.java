@@ -13,12 +13,12 @@ public class ProfileLocalDataSource implements ProfileDataSource {
     // Padrão DTO
     // Buscando o usuário e o seus posts (dois objetos) relacionados encapsulado no UserProfile (terceiro objeto).
     @Override
-    public void findUser(Presenter<UserProfile> presenter) {
+    public void findUser(String user, Presenter<UserProfile> presenter) {
         Database db = Database.getInstance();
-        db.findUsers(db.getUser().getUUID())
-                .addOnSuccessListener((Database.OnSuccessListener<User>) user -> db.findPosts(user.getUuid())
+        db.findUser(user)
+                .addOnSuccessListener((Database.OnSuccessListener<User>) user1 -> db.findPosts(user1.getUuid())
                         .addOnSuccessListener((Database.OnSuccessListener<List<Post>>) posts -> {
-                            presenter.onSuccess(new UserProfile(user, posts));
+                            presenter.onSuccess(new UserProfile(user1, posts));
                             presenter.onComplete();
                         }));
     }

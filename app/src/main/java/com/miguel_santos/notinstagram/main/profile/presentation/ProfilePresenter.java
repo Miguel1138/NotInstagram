@@ -1,5 +1,6 @@
 package com.miguel_santos.notinstagram.main.profile.presentation;
 
+import com.miguel_santos.notinstagram.common.model.Database;
 import com.miguel_santos.notinstagram.common.model.Post;
 import com.miguel_santos.notinstagram.common.model.User;
 import com.miguel_santos.notinstagram.common.model.UserProfile;
@@ -22,9 +23,9 @@ public class ProfilePresenter implements Presenter<UserProfile> {
         this.view = view;
     }
 
-    public void findUser() {
+    public void findUser(String user) {
         view.showProgressBar();
-        dataSource.findUser(this);
+        dataSource.findUser(user, this);
     }
 
     @Override
@@ -32,11 +33,14 @@ public class ProfilePresenter implements Presenter<UserProfile> {
         User user = userProfile.getUser();
         List<Post> postList = userProfile.getPosts();
 
+        boolean editProfile = user.getUuid().equals(Database.getInstance().getUser().getUUID());
+
         view.showData(
                 user.getName(),
                 String.valueOf(user.getFollowers()),
                 String.valueOf(user.getFollowing()),
-                String.valueOf(user.getPosts())
+                String.valueOf(user.getPosts()),
+                editProfile
         );
 
         view.showPosts(postList);

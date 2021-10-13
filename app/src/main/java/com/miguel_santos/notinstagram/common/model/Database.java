@@ -31,6 +31,19 @@ public class Database {
         feed = new HashMap<>();
         followers = new HashMap<>();
 
+        // Simulando banco de dados cheio
+        String email = "user@gmail.com";
+        String password = "123";
+        String name = "Miguel";
+        init(email, password, name);
+
+        for (int i = 0; i < 30; i++) {
+            email = "user" + i + "@gmail.com";
+            password = "123";
+            name = "Miguel" + i;
+            init(email, password, name);
+        }
+
 //        init();
     }
 
@@ -39,11 +52,7 @@ public class Database {
         return new Database();
     }
 
-    public static void init() {
-        String email = "user1@gmail.com";
-        String password = "123";
-        String name = "Miguel";
-
+    public static void init(String email, String password, String name) {
         UserAuth userAuth = new UserAuth();
         userAuth.setEmail(email);
         userAuth.setPassword(password);
@@ -245,9 +254,25 @@ public class Database {
         return this;
     }
 
+    // Método chamado pelo SearchPresenter
+    public Database findUsers(String uuid, String query) {
+        timeout(() -> {
+            ArrayList<User> users = new ArrayList<>();
+            for (User user : Database.users) {
+                if (!user.getUuid().equals(uuid) && user.getName().contains(query))
+                    users.add(user);
+            }
+
+            onSuccessListener.onSuccess(users);
+            onCompleteListener.onComplete();
+        });
+        return this;
+    }
+
     // SIMULANDO BUSCA PELO BANCO DE DADOS
     // SELECT * FROM users WHERE uuid = ?
-    public Database findUsers(String uuid) {
+    // Método chamado pelo ProfilePresenter
+    public Database findUser(String uuid) {
         timeout(() -> {
             Set<User> users = Database.users;
             User res = null;
