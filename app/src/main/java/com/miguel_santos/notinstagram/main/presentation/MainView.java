@@ -15,10 +15,12 @@ public interface MainView extends View {
 
     void showProfile(String user);
 
+    void disposeProfileDetail();
+
     interface ProfileView extends View {
         void showPhoto(Uri photo);
 
-        void showData(String name, String follower, String following, String posts, boolean editProfile);
+        void showData(String name, String follower, String following, String posts, boolean editProfile, boolean follow);
 
         void showPosts(List<Post> posts);
     }

@@ -13,11 +13,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.miguel_santos.notinstagram.R;
-import com.miguel_santos.notinstagram.common.model.Database;
 import com.miguel_santos.notinstagram.common.view.AbstractActivity;
 import com.miguel_santos.notinstagram.main.camera.presentation.AddActivity;
 import com.miguel_santos.notinstagram.main.home.datasource.HomeDataSource;
@@ -49,6 +49,8 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
     Fragment searchFragment;
     // TODO 02/04/2021 Implementar o fragment de favoritos
     Fragment active;
+
+    ProfileFragment profileDetailFragment;
 
     @BindView(R.id.main_toolbar)
     Toolbar toolbar;
@@ -85,9 +87,31 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
                 getSupportFragmentManager().beginTransaction().hide(active).show(profileFragment).commit();
                 active = profileFragment;
                 scrollToolbarEnabled(true);
-                profilePresenter.findUser(Database.getInstance().getUser().getUUID());
+                profilePresenter.findUser();
             }
         }
+    }
+
+    @Override
+    protected void onInject() {
+        ProfileDataSource profileDataSource = new ProfileLocalDataSource();
+        HomeDataSource homeDataSource = new HomeLocalDataSource();
+        SearchLocalDataSource searchDataSouce = new SearchLocalDataSource();
+
+        profilePresenter = new ProfilePresenter(profileDataSource);
+        homePresenter = new HomePresenter(homeDataSource);
+        searchPresenter = new SearchPresenter(searchDataSouce);
+
+        homeFragment = HomeFragment.newInstance(this, homePresenter);
+        profileFragment = ProfileFragment.newInstance(this, profilePresenter);
+        searchFragment = SearchFragment.newInstance(this, searchPresenter);
+
+        active = homeFragment;
+
+        FragmentManager manager = getSupportFragmentManager();
+        manager.beginTransaction().add(R.id.main_fragment, profileFragment).hide(profileFragment).commit();
+        manager.beginTransaction().add(R.id.main_fragment, searchFragment).hide(searchFragment).commit();
+        manager.beginTransaction().add(R.id.main_fragment, homeFragment).hide(homeFragment).commit();
     }
 
     @Override
@@ -115,12 +139,46 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
         }
     }
 
+    // Method responsible to show the user profile details.
     @Override
     public void showProfile(String user) {
-        getSupportFragmentManager().beginTransaction().hide(active).show(profileFragment).commit();
-        active = profileFragment;
+        ProfileDataSource profileDataSource = new ProfileLocalDataSource();
+        ProfilePresenter profilePresenter = new ProfilePresenter(profileDataSource, user);
+        profileDetailFragment = ProfileFragment.newInstance(this, profilePresenter);
+
+        // Passando a tela de profileDetail para o container de fragmentos dentro da main-activity.
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.main_fragment, profileDetailFragment, "detail")
+                .hide(active)
+                .commit();
+
         scrollToolbarEnabled(true);
-        profilePresenter.findUser(user);
+
+        if (getSupportActionBar() != null) {
+            Drawable drawable = findDrawable(R.drawable.ic_arrow_back);
+            getSupportActionBar().setHomeAsUpIndicator(drawable);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        profilePresenter.findUser();
+    }
+
+    @Override
+    public void disposeProfileDetail() {
+        if (getSupportActionBar() != null) {
+            Drawable drawable = findDrawable(R.drawable.ic_insta_camera);
+            getSupportActionBar().setHomeAsUpIndicator(drawable);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        // Revertendo a transação feita no showProfile()
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.remove(profileDetailFragment)
+                .show(active)
+                .commit();
+
+        // Livrando memória.
+        profileDetailFragment = null;
     }
 
     @Override
@@ -130,20 +188,25 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
 
         switch (item.getItemId()) {
             case R.id.menu_bottom_home:
+                if (profileDetailFragment != null) disposeProfileDetail();
                 manager.beginTransaction().hide(active).show(homeFragment).commit();
                 active = homeFragment;
                 return true;
             case R.id.menu_bottom_search:
-                manager.beginTransaction().hide(active).show(searchFragment).commit();
-                active = searchFragment;
-                scrollToolbarEnabled(false);
+                if (profileDetailFragment == null) {
+                    manager.beginTransaction().hide(active).show(searchFragment).commit();
+                    active = searchFragment;
+                    scrollToolbarEnabled(false);
+                }
                 return true;
             case R.id.menu_bottom_add:
                 AddActivity.launch(this);
                 return true;
             case R.id.menu_bottom_profile:
+                if (profileDetailFragment != null) disposeProfileDetail();
                 manager.beginTransaction().hide(active).show(profileFragment).commit();
                 active = profileFragment;
+                profilePresenter.findUser();
                 return true;
         }
         return false;
@@ -157,28 +220,6 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
     @Override
     public void hideProgressBar() {
         findViewById(R.id.main_progress_bar).setVisibility(View.GONE);
-    }
-
-    @Override
-    protected void onInject() {
-        ProfileDataSource profileDataSource = new ProfileLocalDataSource();
-        HomeDataSource homeDataSource = new HomeLocalDataSource();
-        SearchLocalDataSource searchDataSouce = new SearchLocalDataSource();
-
-        profilePresenter = new ProfilePresenter(profileDataSource);
-        homePresenter = new HomePresenter(homeDataSource);
-        searchPresenter = new SearchPresenter(searchDataSouce);
-
-        homeFragment = HomeFragment.newInstance(this, homePresenter);
-        profileFragment = ProfileFragment.newInstance(this, profilePresenter);
-        searchFragment = SearchFragment.newInstance(this, searchPresenter);
-
-        active = homeFragment;
-
-        FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction().add(R.id.main_fragment, profileFragment).hide(profileFragment).commit();
-        manager.beginTransaction().add(R.id.main_fragment, searchFragment).hide(searchFragment).commit();
-        manager.beginTransaction().add(R.id.main_fragment, homeFragment).hide(homeFragment).commit();
     }
 
     @Override

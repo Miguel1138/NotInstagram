@@ -13,17 +13,27 @@ import java.util.List;
 public class ProfilePresenter implements Presenter<UserProfile> {
 
     private final ProfileDataSource dataSource;
+    private final String user;
     private MainView.ProfileView view;
 
     public ProfilePresenter(ProfileDataSource dataSource) {
+        this(dataSource, Database.getInstance().getUser().getUUID());
+    }
+
+    public ProfilePresenter(ProfileDataSource dataSource, String user) {
         this.dataSource = dataSource;
+        this.user = user;
     }
 
     public void setView(MainView.ProfileView view) {
         this.view = view;
     }
 
-    public void findUser(String user) {
+    public String getUser() {
+        return user;
+    }
+
+    public void findUser() {
         view.showProgressBar();
         dataSource.findUser(user, this);
     }
@@ -40,7 +50,8 @@ public class ProfilePresenter implements Presenter<UserProfile> {
                 String.valueOf(user.getFollowers()),
                 String.valueOf(user.getFollowing()),
                 String.valueOf(user.getPosts()),
-                editProfile
+                editProfile,
+                userProfile.isFollowing()
         );
 
         view.showPosts(postList);

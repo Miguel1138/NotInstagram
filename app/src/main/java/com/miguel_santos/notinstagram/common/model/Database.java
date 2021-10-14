@@ -295,6 +295,34 @@ public class Database {
         return this;
     }
 
+    public Database getFollowers(String myUUID, String userUuid) {
+        timeout(() -> {
+            HashMap<String, HashSet<String>> followers = Database.followers;
+            HashSet<String> userFollowers = followers.get(userUuid);
+
+            if (userFollowers == null) userFollowers = new HashSet<>();
+
+            boolean isFollowing = false;
+            for (String uuid : userFollowers) {
+                // Se o meu uuid dentro do hashSet de userFollowers existir, significa que eu já o sigo.
+                if (uuid.equals(myUUID)) {
+                    isFollowing = true;
+                    break;
+                }
+            }
+
+            if (onSuccessListener != null) {
+                onSuccessListener.onSuccess(isFollowing);
+            } else if (onFailureListener != null) {
+                onFailureListener.onFailure(new IllegalArgumentException("Usuário não encontrado."));
+            }
+
+            if (onCompleteListener != null) onCompleteListener.onComplete();
+        });
+
+        return this;
+    }
+
     public interface OnSuccessListener<T> {
         void onSuccess(T response);
     }

@@ -7,6 +7,7 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -29,6 +30,7 @@ import java.io.IOException;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends AbstractFragment<ProfilePresenter> implements MainView.ProfileView {
@@ -105,9 +107,22 @@ public class ProfileFragment extends AbstractFragment<ProfilePresenter> implemen
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            // Set the back function in the action bar.
+            case android.R.id.home:
+                if (!presenter.getUser().equals(Database.getInstance().getUser().getUUID())) {
+                    mainView.disposeProfileDetail();
+                }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        presenter.findUser(Database.getInstance().getUser().getUUID());
+        presenter.findUser();
     }
 
     @Override
@@ -124,14 +139,26 @@ public class ProfileFragment extends AbstractFragment<ProfilePresenter> implemen
     }
 
     @Override
-    public void showData(String name, String follower, String following, String posts, boolean editProfile) {
+    public void showData(String name, String follower, String following, String posts, boolean editProfile, boolean isFollowing) {
         tevUsername.setText(name);
         tevFollowerCount.setText(follower);
         tevFollowingCount.setText(following);
         tevPostsCount.setText(posts);
 
-        // If it's your profile set the button text to edit_profile otherwise set the text to follow.
-        btnEditProfile.setText(editProfile ? R.string.edit_profile : R.string.follow);
+        // If it's your profile set the button text to edit_profile otherwise check if the user you clicked are already following
+        // set the text to unfollow.
+        if (editProfile) {
+            btnEditProfile.setText(R.string.edit_profile);
+        } else if (isFollowing) {
+            btnEditProfile.setText(R.string.unfollow);
+        } else {
+            btnEditProfile.setText(R.string.follow);
+        }
+    }
+
+    @OnClick(R.id.profile_btn_edit_profile)
+    public void onButtonProfileClick() {
+        // TODO: 14/10/2021
     }
 
     @Override
@@ -154,4 +181,5 @@ public class ProfileFragment extends AbstractFragment<ProfilePresenter> implemen
     protected int getLayout() {
         return R.layout.fragment_main_profile;
     }
+
 }
