@@ -221,6 +221,40 @@ public class Database {
         return this;
     }
 
+    public Database followUser(String myUuid, String uuid) {
+        timeout(() -> {
+            HashMap<String, HashSet<String>> followersMap = Database.followers;
+            HashSet<String> followers = followersMap.get(uuid);
+
+            if (followers == null) {
+                followers = new HashSet<>();
+                followersMap.put(uuid, followers);
+            }
+            followers.add(myUuid);
+
+            if (onSuccessListener != null) onSuccessListener.onSuccess(true);
+        });
+
+        return this;
+    }
+
+    public Database unfollowUser(String myUuid, String uuid) {
+        timeout(() -> {
+            HashMap<String, HashSet<String>> followersMap = Database.followers;
+            HashSet<String> followers = followersMap.get(uuid);
+
+            if (followers == null) {
+                followers = new HashSet<>();
+                followersMap.put(uuid, followers);
+            }
+            followers.remove(myUuid);
+
+            if (onSuccessListener != null) onSuccessListener.onSuccess(true);
+        });
+
+        return this;
+    }
+
     public Database findFeed(String uuid) {
         timeout(() -> {
             HashMap<String, HashSet<Feed>> feed = Database.feed;

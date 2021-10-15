@@ -28,4 +28,11 @@ public class ProfileLocalDataSource implements ProfileDataSource {
                 });
     }
 
+    @Override
+    public void followOrUnfollow(boolean follow, String user) {
+        Database db = Database.getInstance();
+        if (follow) db.followUser(db.getUser().getUUID(), user);
+        else db.unfollowUser(db.getUser().getUUID(), user);
+    }
+
 }

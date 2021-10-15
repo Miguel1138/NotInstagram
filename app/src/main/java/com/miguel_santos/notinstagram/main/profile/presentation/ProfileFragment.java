@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -149,16 +150,29 @@ public class ProfileFragment extends AbstractFragment<ProfilePresenter> implemen
         // set the text to unfollow.
         if (editProfile) {
             btnEditProfile.setText(R.string.edit_profile);
+            btnEditProfile.setTag(null);
         } else if (isFollowing) {
             btnEditProfile.setText(R.string.unfollow);
+            btnEditProfile.setTag(false);
         } else {
             btnEditProfile.setText(R.string.follow);
+            btnEditProfile.setTag(true);
         }
     }
 
     @OnClick(R.id.profile_btn_edit_profile)
     public void onButtonProfileClick() {
-        // TODO: 14/10/2021
+        if (btnEditProfile.getTag() != null) {
+            Boolean follow = (Boolean) btnEditProfile.getTag();
+            // Change text after click
+            btnEditProfile.setText(follow ? R.string.unfollow : R.string.follow);
+            btnEditProfile.setTag(!follow);
+
+            presenter.followOrUnfollow(follow);
+        } else {
+            // This is where the open edit profile comes.
+            Toast.makeText(getContext(), "TODO", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
