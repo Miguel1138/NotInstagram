@@ -25,6 +25,7 @@ public class HomeFragment extends AbstractFragment<HomePresenter> implements Mai
 
     private MainView mainView;
     private FeedAdapter adapter;
+
     @BindView(R.id.home_recycler)
     RecyclerView recyclerView;
 

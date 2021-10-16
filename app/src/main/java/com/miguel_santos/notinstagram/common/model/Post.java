@@ -8,6 +8,7 @@ public class Post {
     private Uri uri;
     private String caption;
     private long timestamp;
+    private String photoUrl;
 
     public String getUuid() {
         return uuid;
@@ -39,6 +40,14 @@ public class Post {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     @Override

@@ -21,7 +21,7 @@ import com.miguel_santos.notinstagram.R;
 import com.miguel_santos.notinstagram.common.view.AbstractActivity;
 import com.miguel_santos.notinstagram.main.camera.presentation.AddActivity;
 import com.miguel_santos.notinstagram.main.home.datasource.HomeDataSource;
-import com.miguel_santos.notinstagram.main.home.datasource.HomeLocalDataSource;
+import com.miguel_santos.notinstagram.main.home.datasource.HomeFireDataSource;
 import com.miguel_santos.notinstagram.main.home.presentation.HomeFragment;
 import com.miguel_santos.notinstagram.main.home.presentation.HomePresenter;
 import com.miguel_santos.notinstagram.main.profile.datasource.ProfileDataSource;
@@ -95,7 +95,7 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
     @Override
     protected void onInject() {
         ProfileDataSource profileDataSource = new ProfileLocalDataSource();
-        HomeDataSource homeDataSource = new HomeLocalDataSource();
+        HomeDataSource homeDataSource = new HomeFireDataSource();
         SearchLocalDataSource searchDataSouce = new SearchLocalDataSource();
 
         profilePresenter = new ProfilePresenter(profileDataSource);

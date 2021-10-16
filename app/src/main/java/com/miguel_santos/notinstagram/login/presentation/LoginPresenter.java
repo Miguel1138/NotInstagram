@@ -1,12 +1,12 @@
 package com.miguel_santos.notinstagram.login.presentation;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.miguel_santos.notinstagram.R;
-import com.miguel_santos.notinstagram.common.model.UserAuth;
 import com.miguel_santos.notinstagram.common.presenter.Presenter;
 import com.miguel_santos.notinstagram.common.util.Strings;
 import com.miguel_santos.notinstagram.login.datasource.LoginDataSource;
 
-public class LoginPresenter implements Presenter<UserAuth> {
+public class LoginPresenter implements Presenter<FirebaseUser> {
 
     private final LoginView view;
     private final LoginDataSource dataSource;
@@ -26,7 +26,7 @@ public class LoginPresenter implements Presenter<UserAuth> {
     }
 
     @Override
-    public void onSuccess(UserAuth userAuth) {
+    public void onSuccess(FirebaseUser user) {
         view.onUserLogged();
     }
 

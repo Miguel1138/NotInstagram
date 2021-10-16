@@ -4,13 +4,12 @@ import android.os.Bundle;
 import android.widget.EditText;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.miguel_santos.notinstagram.R;
 import com.miguel_santos.notinstagram.common.components.LoadingButton;
-import com.miguel_santos.notinstagram.common.model.Database;
-import com.miguel_santos.notinstagram.common.model.UserAuth;
 import com.miguel_santos.notinstagram.common.view.AbstractActivity;
 import com.miguel_santos.notinstagram.login.datasource.LoginDataSource;
-import com.miguel_santos.notinstagram.login.datasource.LoginLocalDataSource;
+import com.miguel_santos.notinstagram.login.datasource.LoginFireDataSource;
 import com.miguel_santos.notinstagram.main.presentation.MainActivity;
 import com.miguel_santos.notinstagram.register.presentation.RegisterActivity;
 
@@ -38,19 +37,14 @@ public class LoginActivity extends AbstractActivity implements LoginView {
         super.onCreate(savedInstanceState);
         setStatusBarDark();
 
-        UserAuth user = Database.getInstance().getUser();
-        if (user != null)
-            onUserLogged();
+        String user = FirebaseAuth.getInstance().getUid();
+        if (user != null) onUserLogged();
     }
 
     @Override
-    public void showProgressBar() {
-        buttonEnter.showProgress(true);
-    }
-
-    @Override
-    public void hideProgressBar() {
-        buttonEnter.showProgress(false);
+    protected void onInject() {
+        LoginDataSource dataSource = new LoginFireDataSource();
+        presenter = new LoginPresenter(this, dataSource);
     }
 
     @Override
@@ -73,6 +67,16 @@ public class LoginActivity extends AbstractActivity implements LoginView {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
+    @Override
+    public void showProgressBar() {
+        buttonEnter.showProgress(true);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        buttonEnter.showProgress(false);
+    }
+
     @OnClick(R.id.login_btn_enter)
     public void onButtonEnterClick() {
         presenter.login(edtEmail.getText().toString(), edtPassword.getText().toString());
@@ -81,12 +85,6 @@ public class LoginActivity extends AbstractActivity implements LoginView {
     @OnClick(R.id.login_tev_register)
     public void onTextViewRegisterClick() {
         RegisterActivity.launch(this);
-    }
-
-    @Override
-    protected void onInject() {
-        LoginDataSource dataSource = new LoginLocalDataSource();
-        presenter = new LoginPresenter(this, dataSource);
     }
 
     @OnTextChanged({R.id.login_edt_email, R.id.login_edt_password})

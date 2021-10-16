@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.miguel_santos.notinstagram.R;
 import com.miguel_santos.notinstagram.common.model.Feed;
 import com.miguel_santos.notinstagram.common.model.User;
@@ -60,12 +61,16 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
 
         // Get the posts in the homeFragment feed.
         public void bind(Feed feed) {
-            this.imagePost.setImageURI(feed.getUri());
+            Glide.with(itemView.getContext())
+                    .load(feed.getPhotoUrl())
+                    .into(this.imagePost);
             this.txtCaption.setText(feed.getCaption());
 
             User user = feed.getPublisher();
             if (user != null) {
-                this.imageUser.setImageURI(user.getUri());
+                Glide.with(itemView.getContext())
+                        .load(user.getPhotoUrl())
+                        .into(this.imageUser);
                 this.txtUsername.setText(user.getName());
             }
         }
