@@ -2,13 +2,13 @@ package com.miguel_santos.notinstagram.register.presentation;
 
 import android.net.Uri;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.miguel_santos.notinstagram.R;
-import com.miguel_santos.notinstagram.common.model.UserAuth;
 import com.miguel_santos.notinstagram.common.presenter.Presenter;
 import com.miguel_santos.notinstagram.common.util.Strings;
-import com.miguel_santos.notinstagram.register.datasource.RegisterLocalDataSource;
+import com.miguel_santos.notinstagram.register.datasource.RegisterDataSource;
 
-public class RegisterPresenter implements Presenter<UserAuth> {
+public class RegisterPresenter implements Presenter<FirebaseUser> {
 
     private RegisterView registerView;
     private RegisterView.EmailView emailView;
@@ -16,16 +16,17 @@ public class RegisterPresenter implements Presenter<UserAuth> {
     private RegisterView.WelcomeView welcomeView;
     private RegisterView.PhotoView photoView;
 
-    private final RegisterLocalDataSource dataSource;
+    private final RegisterDataSource dataSource;
 
     private String email;
     private String name;
     private Uri uri;
 
-    public RegisterPresenter(RegisterLocalDataSource dataSource) {
+    public RegisterPresenter(RegisterDataSource dataSource) {
         this.dataSource = dataSource;
     }
 
+    // Setters
     public void setRegisterView(RegisterView registerView) {
         this.registerView = registerView;
     }
@@ -74,15 +75,16 @@ public class RegisterPresenter implements Presenter<UserAuth> {
         this.name = name;
 
         namePasswordView.showProgressBar();
-        dataSource.createUser(name, email, password, this);
+        dataSource.createUser(name.toLowerCase(), email, password, this);
     }
 
+    // Getters
     public String getName() {
         return name;
     }
 
     @Override
-    public void onSuccess(UserAuth response) {
+    public void onSuccess(FirebaseUser response) {
         registerView.showNextView(RegisterSteps.WELCOME);
     }
 
@@ -111,7 +113,6 @@ public class RegisterPresenter implements Presenter<UserAuth> {
     public void jumpRegistration() {
         registerView.onUserCreated();
     }
-
 
     private class UpdatePhotoCallback implements Presenter<Boolean> {
 

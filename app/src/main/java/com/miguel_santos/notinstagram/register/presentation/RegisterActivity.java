@@ -19,7 +19,8 @@ import com.miguel_santos.notinstagram.R;
 import com.miguel_santos.notinstagram.common.components.MediaHelper;
 import com.miguel_santos.notinstagram.common.view.AbstractActivity;
 import com.miguel_santos.notinstagram.main.presentation.MainActivity;
-import com.miguel_santos.notinstagram.register.datasource.RegisterLocalDataSource;
+import com.miguel_santos.notinstagram.register.datasource.RegisterDataSource;
+import com.miguel_santos.notinstagram.register.datasource.RegisterFireDataSource;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import butterknife.BindView;
@@ -56,7 +57,7 @@ public class RegisterActivity extends AbstractActivity implements RegisterView, 
 
     @Override
     protected void onInject() {
-        RegisterLocalDataSource dataSource = new RegisterLocalDataSource();
+        RegisterDataSource dataSource = new RegisterFireDataSource();
         presenter = new RegisterPresenter(dataSource);
         presenter.setRegisterView(this);
 

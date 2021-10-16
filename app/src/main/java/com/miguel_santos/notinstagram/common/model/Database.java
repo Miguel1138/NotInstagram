@@ -32,17 +32,17 @@ public class Database {
         followers = new HashMap<>();
 
         // Simulando banco de dados cheio
-        String email = "user@gmail.com";
-        String password = "123";
-        String name = "Miguel";
-        init(email, password, name);
-
-        for (int i = 0; i < 30; i++) {
-            email = "user" + i + "@gmail.com";
-            password = "123";
-            name = "Miguel" + i;
-            init(email, password, name);
-        }
+//        String email = "user@gmail.com";
+//        String password = "123";
+//        String name = "Miguel";
+//        init(email, password, name);
+//
+//        for (int i = 0; i < 30; i++) {
+//            email = "user" + i + "@gmail.com";
+//            password = "123";
+//            name = "Miguel" + i;
+//            init(email, password, name);
+//        }
 
 //        init();
     }

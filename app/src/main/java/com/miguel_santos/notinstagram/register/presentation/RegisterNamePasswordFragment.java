@@ -25,14 +25,9 @@ public class RegisterNamePasswordFragment extends AbstractFragment<RegisterPrese
     @BindView(R.id.register_edt_password_confirm)
     EditText edtConfirmPassword;
     @BindView(R.id.register_input_edt_password_confirm)
-    TextInputLayout inputLayoutConfirmPasswrod;
+    TextInputLayout inputLayoutConfirmPassword;
     @BindView(R.id.register_name_btn_next)
     LoadingButton btnNext;
-
-    @Override
-    public void onFailureCreateUser(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-    }
 
     public RegisterNamePasswordFragment() {
 
@@ -67,6 +62,11 @@ public class RegisterNamePasswordFragment extends AbstractFragment<RegisterPrese
         }
     }
 
+    @Override
+    public void onFailureCreateUser(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
     @OnClick(R.id.register_tev_login)
     public void onTextViewLoginClick() {
         if (isAdded() && getActivity() != null) {
@@ -99,8 +99,8 @@ public class RegisterNamePasswordFragment extends AbstractFragment<RegisterPrese
         inputLayoutPassword.setErrorEnabled(false);
 
         edtConfirmPassword.setBackground(findDrawable(R.drawable.edit_text_background));
-        inputLayoutConfirmPasswrod.setError(null);
-        inputLayoutConfirmPasswrod.setErrorEnabled(false);
+        inputLayoutConfirmPassword.setError(null);
+        inputLayoutConfirmPassword.setErrorEnabled(false);
     }
 
     @Override

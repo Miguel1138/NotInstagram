@@ -12,6 +12,7 @@ public class User {
     private int following;
     private int posts;
     private Uri uri;
+    private String photoUrl;
 
     public String getName() {
         return name;
@@ -67,6 +68,14 @@ public class User {
 
     public void setUri(Uri uri) {
         this.uri = uri;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     @Override
