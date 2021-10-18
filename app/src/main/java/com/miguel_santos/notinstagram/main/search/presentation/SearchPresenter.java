@@ -3,16 +3,16 @@ package com.miguel_santos.notinstagram.main.search.presentation;
 import com.miguel_santos.notinstagram.common.model.User;
 import com.miguel_santos.notinstagram.common.presenter.Presenter;
 import com.miguel_santos.notinstagram.main.presentation.MainView;
-import com.miguel_santos.notinstagram.main.search.datasource.SearchLocalDataSource;
+import com.miguel_santos.notinstagram.main.search.datasource.SearchDataSource;
 
 import java.util.List;
 
 public class SearchPresenter implements Presenter<List<User>> {
 
-    private final SearchLocalDataSource dataSource;
+    private final SearchDataSource dataSource;
     private MainView.SearchView view;
 
-    public SearchPresenter(SearchLocalDataSource dataSource) {
+    public SearchPresenter(SearchDataSource dataSource) {
         this.dataSource = dataSource;
     }
 

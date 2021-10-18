@@ -1,9 +1,6 @@
 package com.miguel_santos.notinstagram.main.profile.presentation;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,14 +17,14 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.miguel_santos.notinstagram.R;
-import com.miguel_santos.notinstagram.common.model.Database;
 import com.miguel_santos.notinstagram.common.model.Post;
 import com.miguel_santos.notinstagram.common.view.AbstractFragment;
 import com.miguel_santos.notinstagram.main.presentation.MainView;
 
-import java.io.IOException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -112,9 +109,8 @@ public class ProfileFragment extends AbstractFragment<ProfilePresenter> implemen
         switch (item.getItemId()) {
             // Set the back function in the action bar.
             case android.R.id.home:
-                if (!presenter.getUser().equals(Database.getInstance().getUser().getUUID())) {
+                if (!presenter.getUser().equals(FirebaseAuth.getInstance().getUid()))
                     mainView.disposeProfileDetail();
-                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -127,16 +123,8 @@ public class ProfileFragment extends AbstractFragment<ProfilePresenter> implemen
     }
 
     @Override
-    public void showPhoto(Uri photo) {
-        try {
-            if (getContext() != null && getContext().getContentResolver() != null) {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photo);
-
-                imageViewProfile.setImageBitmap(bitmap);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void showPhoto(String photo) {
+        Glide.with(getContext()).load(photo).into(imageViewProfile);
     }
 
     @Override

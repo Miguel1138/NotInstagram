@@ -6,5 +6,5 @@ import com.miguel_santos.notinstagram.common.presenter.Presenter;
 public interface ProfileDataSource {
     void findUser(String user, Presenter<UserProfile> presenter);
 
-    void followOrUnfollow(boolean follow, String user);
+    void followOrUnfollow(boolean follow, String uid);
 }

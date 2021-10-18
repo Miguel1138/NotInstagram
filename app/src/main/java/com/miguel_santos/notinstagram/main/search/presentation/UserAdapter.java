@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.miguel_santos.notinstagram.R;
 import com.miguel_santos.notinstagram.common.model.User;
 
@@ -60,7 +61,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         }
 
         public void bind(User user) {
-            this.imageUser.setImageURI(user.getUri());
+            Glide.with(itemView.getContext()).load(user.getPhotoUrl()).into(imageUser);
             this.txtUsername.setText(user.getName());
             this.txtName.setText(user.getName());
         }

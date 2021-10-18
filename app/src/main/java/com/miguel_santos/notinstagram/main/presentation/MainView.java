@@ -1,7 +1,5 @@
 package com.miguel_santos.notinstagram.main.presentation;
 
-import android.net.Uri;
-
 import com.miguel_santos.notinstagram.common.model.Feed;
 import com.miguel_santos.notinstagram.common.model.Post;
 import com.miguel_santos.notinstagram.common.model.User;
@@ -18,7 +16,7 @@ public interface MainView extends View {
     void disposeProfileDetail();
 
     interface ProfileView extends View {
-        void showPhoto(Uri photo);
+        void showPhoto(String photo);
 
         void showData(String name, String follower, String following, String posts, boolean editProfile, boolean follow);
 

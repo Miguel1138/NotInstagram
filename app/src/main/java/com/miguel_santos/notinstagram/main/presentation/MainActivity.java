@@ -25,10 +25,11 @@ import com.miguel_santos.notinstagram.main.home.datasource.HomeFireDataSource;
 import com.miguel_santos.notinstagram.main.home.presentation.HomeFragment;
 import com.miguel_santos.notinstagram.main.home.presentation.HomePresenter;
 import com.miguel_santos.notinstagram.main.profile.datasource.ProfileDataSource;
-import com.miguel_santos.notinstagram.main.profile.datasource.ProfileLocalDataSource;
+import com.miguel_santos.notinstagram.main.profile.datasource.ProfileFireDataSource;
 import com.miguel_santos.notinstagram.main.profile.presentation.ProfileFragment;
 import com.miguel_santos.notinstagram.main.profile.presentation.ProfilePresenter;
-import com.miguel_santos.notinstagram.main.search.datasource.SearchLocalDataSource;
+import com.miguel_santos.notinstagram.main.search.datasource.SearchDataSource;
+import com.miguel_santos.notinstagram.main.search.datasource.SearchFireDataSource;
 import com.miguel_santos.notinstagram.main.search.presentation.SearchFragment;
 import com.miguel_santos.notinstagram.main.search.presentation.SearchPresenter;
 
@@ -94,9 +95,9 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
 
     @Override
     protected void onInject() {
-        ProfileDataSource profileDataSource = new ProfileLocalDataSource();
+        ProfileDataSource profileDataSource = new ProfileFireDataSource();
         HomeDataSource homeDataSource = new HomeFireDataSource();
-        SearchLocalDataSource searchDataSouce = new SearchLocalDataSource();
+        SearchDataSource searchDataSouce = new SearchFireDataSource();
 
         profilePresenter = new ProfilePresenter(profileDataSource);
         homePresenter = new HomePresenter(homeDataSource);
@@ -142,7 +143,7 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
     // Method responsible to show the user profile details.
     @Override
     public void showProfile(String user) {
-        ProfileDataSource profileDataSource = new ProfileLocalDataSource();
+        ProfileDataSource profileDataSource = new ProfileFireDataSource();
         ProfilePresenter profilePresenter = new ProfilePresenter(profileDataSource, user);
         profileDetailFragment = ProfileFragment.newInstance(this, profilePresenter);
 

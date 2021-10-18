@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.miguel_santos.notinstagram.R;
 import com.miguel_santos.notinstagram.common.model.Post;
 
@@ -51,7 +52,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         }
 
         public void bind(Post post) {
-            this.imagePost.setImageURI(post.getUri());
+            Glide.with(itemView.getContext()).load(post.getPhotoUrl()).into(imagePost);
         }
 
     }
