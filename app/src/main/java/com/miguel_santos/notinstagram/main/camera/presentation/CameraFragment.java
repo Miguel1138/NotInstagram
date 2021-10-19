@@ -58,13 +58,20 @@ public class CameraFragment extends AbstractFragment {
         if (getContext() != null) {
             mediaHelper = MediaHelper.getInstance(this);
             if (mediaHelper.checkCameraHardware(getContext())) {
-                camera = mediaHelper.getCameraInstance();
-                CameraPreview cameraPreview = new CameraPreview(getContext(), camera);
-                frameLayout.addView(cameraPreview);
+                camera = mediaHelper.getCameraInstance(this, getContext());
+                if (camera != null) {
+                    CameraPreview cameraPreview = new CameraPreview(getContext(), camera);
+                    frameLayout.addView(cameraPreview);
+                }
             }
         }
 
         return view;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        addView.dispose();
     }
 
     @OnClick(R.id.camera_image_picture)

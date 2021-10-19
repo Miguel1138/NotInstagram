@@ -2,6 +2,7 @@ package com.miguel_santos.notinstagram.register.presentation;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -104,6 +106,13 @@ public class RegisterActivity extends AbstractActivity implements RegisterView, 
         cropViewImageEnabled(true);
         MediaHelper mediaHelper = MediaHelper.getInstance(this);
         mediaHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+    // Only show the camera if the permission it's granted.
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            showCamera();
     }
 
     private void cropViewImageEnabled(boolean enabled) {

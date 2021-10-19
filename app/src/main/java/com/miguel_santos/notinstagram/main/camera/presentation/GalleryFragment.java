@@ -83,6 +83,12 @@ public class GalleryFragment extends AbstractFragment<GalleryPresenter> implemen
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        addView.dispose();
+    }
+
+    @Override
     public void onPicturesLoaded(List<Uri> uriList) {
         // Verifies if the uriList has at least one item.
         if (uriList.size() > 0) {

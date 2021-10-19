@@ -103,6 +103,13 @@ public class MediaHelper {
     }
 
     public void chooseCamera() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && getContext() != null
+                && getContext().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, CropImage.CAMERA_CAPTURE_PERMISSIONS_REQUEST_CODE);
+            return;
+        }
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         PackageManager packageManager = getContext().getPackageManager();
         if (intent.resolveActivity(packageManager) != null) {
@@ -192,17 +199,15 @@ public class MediaHelper {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
-    public Camera getCameraInstance() {
+    public Camera getCameraInstance(Fragment fragment, Context context) {
         Camera camera = null;
 
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                    && getContext() != null
-                    && getContext().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                if (activity != null)
-                    activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, 300);
-                else
-                    fragment.requestPermissions(new String[]{Manifest.permission.CAMERA}, 300);
+                    && fragment != null
+                    && context.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                fragment.requestPermissions(new String[]{Manifest.permission.CAMERA}, 300);
+                return null;
             }
             camera = camera.open();
         } catch (Exception e) {
