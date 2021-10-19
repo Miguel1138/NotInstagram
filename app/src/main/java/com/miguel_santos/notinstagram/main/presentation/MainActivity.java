@@ -112,7 +112,8 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().add(R.id.main_fragment, profileFragment).hide(profileFragment).commit();
         manager.beginTransaction().add(R.id.main_fragment, searchFragment).hide(searchFragment).commit();
-        manager.beginTransaction().add(R.id.main_fragment, homeFragment).hide(homeFragment).commit();
+        // Prevent the blank homeFragment in the first call.
+        manager.beginTransaction().add(R.id.main_fragment, homeFragment).commit();
     }
 
     @Override
@@ -191,6 +192,8 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
             case R.id.menu_bottom_home:
                 if (profileDetailFragment != null) disposeProfileDetail();
                 manager.beginTransaction().hide(active).show(homeFragment).commit();
+                // Show the feed if it has any.
+                homePresenter.findFeed();
                 active = homeFragment;
                 return true;
             case R.id.menu_bottom_search:

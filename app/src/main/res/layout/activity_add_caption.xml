@@ -44,4 +44,11 @@
             android:hint="@string/write_caption" />
     </LinearLayout>
 
+    <ProgressBar
+        android:id="@+id/main_add_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

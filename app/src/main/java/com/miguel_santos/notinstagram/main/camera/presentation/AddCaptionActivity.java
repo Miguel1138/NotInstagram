@@ -11,13 +11,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
 import com.miguel_santos.notinstagram.R;
 import com.miguel_santos.notinstagram.common.view.AbstractActivity;
-import com.miguel_santos.notinstagram.main.camera.datasource.AddLocalDataSource;
+import com.miguel_santos.notinstagram.main.camera.datasource.AddDataSource;
+import com.miguel_santos.notinstagram.main.camera.datasource.AddFireDataSource;
 
 import butterknife.BindView;
 
@@ -30,7 +32,8 @@ public class AddCaptionActivity extends AbstractActivity implements AddCaptionVi
     ImageView imageCaption;
     @BindView(R.id.main_add_caption_edt)
     EditText edtCaption;
-
+    @BindView(R.id.main_add_progress)
+    ProgressBar progressBar;
 
     public static void launch(Context context, Uri uri) {
         Intent intent = new Intent(context, AddCaptionActivity.class);
@@ -58,8 +61,24 @@ public class AddCaptionActivity extends AbstractActivity implements AddCaptionVi
         uri = getIntent().getExtras().getParcelable("uri");
         imageCaption.setImageURI(uri);
 
-        AddLocalDataSource dataSource = new AddLocalDataSource();
+        AddDataSource dataSource = new AddFireDataSource();
         presenter = new AddPresenter(this, dataSource);
+    }
+
+    @Override
+    public void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_share, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -70,21 +89,14 @@ public class AddCaptionActivity extends AbstractActivity implements AddCaptionVi
                 return true;
             case R.id.action_share:
                 presenter.createPost(uri, edtCaption.getText().toString());
-                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_share, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     public void postSaved() {
-        // TODO: 03/05/2021
+        finish();
     }
 
     @Override

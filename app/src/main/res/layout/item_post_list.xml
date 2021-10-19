@@ -47,7 +47,6 @@
         android:id="@+id/profile_image_grid"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/red"
         android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
