@@ -48,35 +48,47 @@ public class AddFireDataSource implements AddDataSource {
                                             .document();
 
                                     postRef.set(post)
-                                            .addOnSuccessListener(unused ->
-                                                    // passing this post to the followers.
-                                                    FirebaseFirestore.getInstance()
-                                                            .collection("followers")
-                                                            .get()
-                                                            .addOnCompleteListener(task -> {
-                                                                if (!task.isSuccessful()) return;
+                                            .addOnSuccessListener(unused -> {
+                                                // Set the proper publisher in the feed.
+                                                DocumentReference userRef = FirebaseFirestore.getInstance()
+                                                        .collection("user")
+                                                        .document(uid);
 
-                                                                List<DocumentSnapshot> documents = task.getResult().getDocuments();
-                                                                for (DocumentSnapshot doc : documents) {
-                                                                    User user = doc.toObject(User.class);
+                                                userRef.get().addOnCompleteListener(t -> {
+                                                    if (t.isSuccessful()) {
+                                                        User me = t.getResult().toObject(User.class);
 
-                                                                    Feed feed = new Feed();
-                                                                    feed.setPublisher(user);
-                                                                    feed.setUuid(doc.getId());
-                                                                    feed.setPhotoUrl(post.getPhotoUrl());
-                                                                    feed.setTimestamp(post.getTimestamp());
-                                                                    feed.setCaption(post.getCaption());
+                                                        // passing this post to the followers.
+                                                        FirebaseFirestore.getInstance()
+                                                                .collection("followers")
+                                                                .get()
+                                                                .addOnCompleteListener(task -> {
+                                                                    if (!task.isSuccessful())
+                                                                        return;
 
-                                                                    // Add post of the user in the feed.
-                                                                    FirebaseFirestore.getInstance()
-                                                                            .collection("feed")
-                                                                            .document(user.getUuid())
-                                                                            .collection("posts")
-                                                                            .document(postRef.getPath())
-                                                                            .set(feed);
-                                                                }
-                                                            })
-                                            )
+                                                                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                                                                    for (DocumentSnapshot doc : documents) {
+                                                                        User user = doc.toObject(User.class);
+
+                                                                        Feed feed = new Feed();
+                                                                        feed.setPublisher(me);
+                                                                        feed.setUuid(postRef.getId());
+                                                                        feed.setPhotoUrl(post.getPhotoUrl());
+                                                                        feed.setTimestamp(post.getTimestamp());
+                                                                        feed.setCaption(post.getCaption());
+
+                                                                        // Add post of the user in the feed.
+                                                                        FirebaseFirestore.getInstance()
+                                                                                .collection("feed")
+                                                                                .document(user.getUuid())
+                                                                                .collection("posts")
+                                                                                .document(postRef.getId())
+                                                                                .set(feed);
+                                                                    }
+                                                                });
+                                                    }
+                                                });
+                                            })
                                             .addOnFailureListener(e -> presenter.onError(e.getMessage()));
 
                                     String id = postRef.getId();
