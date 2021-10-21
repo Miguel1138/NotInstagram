@@ -54,6 +54,17 @@ public class AddFireDataSource implements AddDataSource {
                                                         .collection("user")
                                                         .document(uid);
 
+                                                // Increment the post counter
+                                                FirebaseFirestore.getInstance().runTransaction(transaction -> {
+                                                    DocumentSnapshot documentSnapshot = transaction.get(userRef);
+                                                    User user = documentSnapshot.toObject(User.class);
+
+                                                    int posts = user.getPosts() + 1;
+                                                    transaction.update(userRef, "posts", posts);
+
+                                                    return null;
+                                                });
+
                                                 userRef.get().addOnCompleteListener(t -> {
                                                     if (t.isSuccessful()) {
                                                         User me = t.getResult().toObject(User.class);
