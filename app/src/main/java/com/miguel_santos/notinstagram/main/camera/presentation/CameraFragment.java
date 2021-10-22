@@ -83,7 +83,7 @@ public class CameraFragment extends AbstractFragment {
         camera.takePicture(null, null, null, (data, camera) -> {
             progressBar.setVisibility(View.GONE);
             cameraButton.setVisibility(View.VISIBLE);
-            Uri uri = mediaHelper.saveCameraFile(data);
+            Uri uri = mediaHelper.saveCameraFile(getContext(), data);
             if (uri != null)
                 addView.onImageLoaded(uri);
         });

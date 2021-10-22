@@ -19,6 +19,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.miguel_santos.notinstagram.R;
 import com.miguel_santos.notinstagram.common.view.AbstractActivity;
+import com.miguel_santos.notinstagram.login.presentation.LoginActivity;
 import com.miguel_santos.notinstagram.main.camera.presentation.AddActivity;
 import com.miguel_santos.notinstagram.main.home.datasource.HomeDataSource;
 import com.miguel_santos.notinstagram.main.home.datasource.HomeFireDataSource;
@@ -181,6 +182,11 @@ public class MainActivity extends AbstractActivity implements BottomNavigationVi
 
         // Livrando memória.
         profileDetailFragment = null;
+    }
+
+    @Override
+    public void logout() {
+        LoginActivity.launch(this);
     }
 
     @Override

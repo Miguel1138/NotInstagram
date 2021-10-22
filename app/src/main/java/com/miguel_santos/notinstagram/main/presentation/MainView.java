@@ -15,6 +15,8 @@ public interface MainView extends View {
 
     void disposeProfileDetail();
 
+    void logout();
+
     interface ProfileView extends View {
         void showPhoto(String photo);
 

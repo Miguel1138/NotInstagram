@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,7 +13,9 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.miguel_santos.notinstagram.R;
+import com.miguel_santos.notinstagram.common.components.CustomDialog;
 import com.miguel_santos.notinstagram.common.model.Feed;
 import com.miguel_santos.notinstagram.common.view.AbstractFragment;
 import com.miguel_santos.notinstagram.main.presentation.MainView;
@@ -66,6 +69,29 @@ public class HomeFragment extends AbstractFragment<HomePresenter> implements Mai
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_profile, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_settings:
+                CustomDialog customDialog = new CustomDialog.Builder(getContext())
+                        .setTitle(R.string.logout)
+                        .addButton(v -> {
+                            switch (v.getId()) {
+                                case R.string.logout_action:
+                                    FirebaseAuth.getInstance().signOut();
+                                    mainView.logout();
+                                    break;
+                                case R.string.cancel:
+                                    break;
+                            }
+                        }, R.string.logout_action, R.string.cancel)
+                        .build();
+                customDialog.show();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

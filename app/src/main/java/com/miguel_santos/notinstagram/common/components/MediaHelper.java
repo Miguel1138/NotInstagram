@@ -217,8 +217,8 @@ public class MediaHelper {
         return camera;
     }
 
-    public Uri saveCameraFile(byte[] data) {
-        File pictureFile = createCameraFile(true);
+    public Uri saveCameraFile(Context context, byte[] data) {
+        File pictureFile = createCameraFile(context, true);
         File outputMediaFile = null;
 
         if (pictureFile == null) return null;
@@ -243,7 +243,7 @@ public class MediaHelper {
             fileOutputStream.close();
 
             Matrix matrix = new Matrix();
-            outputMediaFile = createCameraFile(false);
+            outputMediaFile = createCameraFile(context, false);
             if (outputMediaFile == null) return null;
 
             Bitmap result = Bitmap.createBitmap(realImage, 0, 0,
@@ -270,10 +270,10 @@ public class MediaHelper {
         return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
     }
 
-    private File createCameraFile(boolean temp) {
+    private File createCameraFile(Context context, boolean temp) {
         if (getContext() == null) return null;
 
-        File mediaStorageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File mediaStorageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         if (mediaStorageDir != null && !mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) return null;
         }
